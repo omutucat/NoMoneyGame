@@ -549,6 +549,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _BoardSquarePrefab: {fileID: 4404042596884565883, guid: b31d7fa2ec8184b4ba2e711f243e9b68, type: 3}
+  _BoardWidth: 9
+  _BoardHeight: 9
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -37,9 +37,9 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// 駒の種類
         /// </summary>
         public PieceType Type { get; }
-        
+
         public Point Position { get; private set; }
-        
+
         public abstract List<Point> MoveablePoints { get; }
 
         protected Dictionary<AttributeType, PieceAttribute> Attributes { get; }
@@ -57,7 +57,7 @@ namespace NoMoney.Assets.Scripts.Pieces
                 }
             }
         }
-        
+
         public abstract void OnTurnEnd();
 
         public void SetPosition(Point position) => Position = position;
