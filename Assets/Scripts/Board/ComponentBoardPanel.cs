@@ -64,4 +64,94 @@ public class ComponentBoardPanel : MonoBehaviour
             }
         }
     }
+
+    // ボードが正当かチェックする。オブジェクトが重なっていないか、座標が範囲内かを確認する
+    public bool IsvalidBoard()
+    {
+        foreach (var obj in Board.Objects.Pieces)
+        {
+            // 座標が範囲内か
+            if (obj.Position.X < 0 || obj.Position.X >= Board.Size.Width)
+            {
+                return false;
+            }
+            if (obj.Position.Y < 0 || obj.Position.Y >= Board.Size.Height)
+            {
+                return false;
+            }
+            // その場所に他のオブジェクトが存在していないか Ghostは重なっても良い
+            if (obj.Type == PieceType.Ghost)
+            {
+                continue;
+            }
+            var objects = GetObjectsAt(obj.Position);
+            if (objects.Count > 1)
+            {
+                foreach (var other in objects)
+                {
+                    if (other != obj && other.Type != PieceType.Ghost)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // その場所に存在するオブジェクトを全て返す
+    private List<PieceBase> GetObjectsAt(Point point)
+    {
+        var objects = new List<PieceBase>();
+        foreach (var obj in Board.Objects.Pieces)
+        {
+            if (obj.Position.X == point.X && obj.Position.Y == point.Y)
+            {
+                objects.Add(obj);
+            }
+        }
+
+        return objects;
+    }
+
+    // TODO オブジェクトの移動可能な場所を返す
+    public List<Point> GetMovablePoints(PieceBase piece)
+    {
+        var points = new List<Point>();
+        foreach (var point in piece.MoveablePoints)
+        {
+            if (point.X < 0 || point.X >= Board.Size.Width)
+            {
+                continue;
+            }
+            if (point.Y < 0 || point.Y >= Board.Size.Height)
+            {
+                continue;
+            }
+            var objects = GetObjectsAt(point);
+            if (objects.Count == 0)
+            {
+                points.Add(point);
+            }
+            else
+            {
+                foreach (var obj in objects)
+                {
+                    if (obj.Type == PieceType.Ghost)
+                    {
+                        points.Add(point);
+                    }
+                }
+            }
+        }
+
+        return points;
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+
+    }
 }
