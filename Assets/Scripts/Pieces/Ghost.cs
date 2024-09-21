@@ -2,15 +2,14 @@
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
-    public class Ghost : PieceBase
+    /// <summary>
+    /// 幽霊駒
+    /// 他の駒に重なることが出来、重なっている駒を行動不能にする
+    /// </summary>
+    public class Ghost : PieceBase, IGhost
     {
-        public Ghost(Point position) : base(PieceType.Ghost, position,
-            new PieceAttribute[]
-            {
-                new GhostStateAttribute()
-            })
+        public Ghost(Point position) : base(position)
         {
-
         }
 
         public override List<Point> MoveablePoints
@@ -18,20 +17,21 @@ namespace NoMoney.Assets.Scripts.Pieces
             get
             {
                 var points = new List<Point>
-                    //前三方向と、前2マス先に進める
+                    // 前三方向と、前2マス先に進める
+                    // 0 x 0
+                    // x x x
+                    // 0 m 0
+                    // 0 0 0
+                    // x: 進める位置
+                    // m: 駒の位置
                     {
-                        new Point(Position.X, Position.Y + 1),
-                        new Point(Position.X-1, Position.Y + 1),
-                        new Point(Position.X+1, Position.Y + 1),
-                        new Point(Position.X, Position.Y + 2)
+                        new(Position.X, Position.Y + 1),
+                        new(Position.X - 1, Position.Y + 1),
+                        new(Position.X + 1, Position.Y + 1),
+                        new(Position.X, Position.Y + 2)
                     };
                 return points;
             }
-        }
-        
-        public override void OnTurnEnd()
-        {
-            
         }
     }
 }

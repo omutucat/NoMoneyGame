@@ -2,15 +2,18 @@
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
-    public class Hero : PieceBase
+    /// <summary>
+    /// 勇者の駒
+    /// 5ターン目まで動けない
+    /// 盤面の端に到達すると、反対側の端にワープする
+    /// </summary>
+    public class Hero : PieceBase, ITeleportable
     {
         private int _TurnCount = 0;
         private const int IMMOBILE_TURNS = 5;
 
-        
-        public Hero(Point position) : base(PieceType.Hero, position)
+        public Hero(Point position) : base(position, new List<PieceStatus> { PieceStatus.Immobilized })
         {
-
         }
 
         public override List<Point> MoveablePoints
@@ -26,14 +29,14 @@ namespace NoMoney.Assets.Scripts.Pieces
                     // 8方向全てに進める
                     return new List<Point>
                     {
-                        new Point(Position.X + 1, Position.Y),
-                        new Point(Position.X - 1, Position.Y),
-                        new Point(Position.X, Position.Y + 1),
-                        new Point(Position.X, Position.Y - 1),
-                        new Point(Position.X + 1, Position.Y + 1),
-                        new Point(Position.X + 1, Position.Y - 1),
-                        new Point(Position.X - 1, Position.Y + 1),
-                        new Point(Position.X - 1, Position.Y - 1),
+                        new(Position.X + 1, Position.Y),
+                        new(Position.X - 1, Position.Y),
+                        new(Position.X, Position.Y + 1),
+                        new(Position.X, Position.Y - 1),
+                        new(Position.X + 1, Position.Y + 1),
+                        new(Position.X + 1, Position.Y - 1),
+                        new(Position.X - 1, Position.Y + 1),
+                        new(Position.X - 1, Position.Y - 1),
                     };
                 }
             }
@@ -41,8 +44,11 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public override void OnTurnEnd()
         {
-            _TurnCount++;
+            if (_TurnCount < IMMOBILE_TURNS)
+            {
+                _TurnCount++;
+                StatusList.Remove(PieceStatus.Immobilized);
+            }
         }
-        
     }
 }

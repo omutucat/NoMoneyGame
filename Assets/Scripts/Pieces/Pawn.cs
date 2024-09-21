@@ -2,11 +2,13 @@
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
-    public class Porn : PieceBase
+    /// <summary>
+    /// ポーンの駒
+    /// </summary>
+    public class Pawn : PieceBase
     {
-        public Porn(Point position) : base(PieceType.Porn, position)
+        public Pawn(Point position) : base(position)
         {
-            
         }
 
         public override List<Point> MoveablePoints
@@ -16,16 +18,12 @@ namespace NoMoney.Assets.Scripts.Pieces
                 var points = new List<Point>
                 //前三方向に進める
                 {
-                    new Point(Position.X, Position.Y + 1),
-                    new Point(Position.X-1, Position.Y + 1),
-                    new Point(Position.X+1, Position.Y + 1)
+                    new(Position.X, Position.Y + 1),
+                    new(Position.X-1, Position.Y + 1),
+                    new(Position.X+1, Position.Y + 1)
                 };
                 return points;
             }
-        }
-
-        public override void OnTurnEnd()
-        {
         }
     }
 }

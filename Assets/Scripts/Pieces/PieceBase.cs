@@ -1,21 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
     /// <summary>
-    /// 駒の種類
+    /// 座標
     /// </summary>
-    public enum PieceType
-    {
-        Tank,
-        Porn,
-        Troll,
-        Hero,
-        Ghost
-    }
-
     public struct Point
     {
         public int X;
@@ -34,31 +24,29 @@ namespace NoMoney.Assets.Scripts.Pieces
     public abstract class PieceBase
     {
         /// <summary>
-        /// 駒の種類
+        /// 駒の位置
         /// </summary>
-        public PieceType Type { get; }
-
         public Point Position { get; private set; }
 
+        /// <summary>
+        /// 移動可能な座標
+        /// </summary>
         public abstract List<Point> MoveablePoints { get; }
 
-        protected Dictionary<AttributeType, PieceAttribute> Attributes { get; }
+        /// <summary>
+        /// 駒の属性
+        /// </summary>
+        protected List<PieceStatus> StatusList { get; }
 
-        protected PieceBase(PieceType type, Point position, IEnumerable<PieceAttribute> attributes = null)
+        protected PieceBase(Point position, IEnumerable<PieceStatus> statusList = null)
         {
-            Type = type;
             Position = position;
-            Attributes = new Dictionary<AttributeType, PieceAttribute>();
-            if (attributes != null)
-            {
-                foreach (var attr in attributes)
-                {
-                    Attributes[attr.Type] = attr;
-                }
-            }
+            StatusList = statusList?.ToList() ?? new List<PieceStatus>();
         }
 
-        public abstract void OnTurnEnd();
+        public virtual void OnTurnEnd()
+        {
+        }
 
         public void SetPosition(Point position) => Position = position;
     }
