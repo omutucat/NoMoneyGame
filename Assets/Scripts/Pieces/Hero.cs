@@ -4,8 +4,8 @@ namespace NoMoney.Assets.Scripts.Pieces
 {
     public class Hero : PieceBase
     {
-        private int _turnCount = 0;
-        private const int ImmobileTurns = 5;
+        private int _TurnCount = 0;
+        private const int IMMOBILE_TURNS = 5;
 
         
         public Hero(Point position) : base(PieceType.Hero, position)
@@ -17,7 +17,7 @@ namespace NoMoney.Assets.Scripts.Pieces
         {
             get
             {
-                if (_turnCount < ImmobileTurns)
+                if (_TurnCount < IMMOBILE_TURNS)
                 {
                     return new List<Point>(); // 動けないので空のリストを返す
                 }
@@ -41,7 +41,7 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public override void OnTurnEnd()
         {
-            _turnCount++;
+            _TurnCount++;
         }
         
     }
