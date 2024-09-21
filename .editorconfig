@@ -308,6 +308,9 @@ indent_style = space
 indent_size = 4
 tab_width = 4
 
+# IDE0130: Namespace がフォルダー構造と一致しません
+dotnet_style_namespace_match_folder = false
+
 [*.{appxmanifest,axml,build,config,csproj,dbml,discomap,dtd,jsproj,lsproj,njsproj,nuspec,proj,props,resw,resx,StyleCop,targets,tasks,vbproj,xml,xsd}]
 indent_style = space
 indent_size = 2
