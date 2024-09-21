@@ -4,25 +4,6 @@ using System.Collections.Generic;
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
-    public abstract class Shape
-    {
-        // 共通のプロパティやメソッドをここに定義
-    }
-
-    public class Normal : Shape
-    {
-        // Normal 特有のプロパティやメソッド
-    }
-
-    public class Abnormal : Shape
-    {
-        public List<Point> AnotherPositions { get; }
-
-        public Abnormal(List<Point> anotherPositions)
-        {
-            AnotherPositions = anotherPositions;
-        }
-    }
     /// <summary>
     /// 駒の種類
     /// </summary>
@@ -31,8 +12,8 @@ namespace NoMoney.Assets.Scripts.Pieces
         Tank,
         Porn,
         Troll,
-        
-        
+        Hero,
+        Ghost
     }
 
     public struct Point
@@ -57,18 +38,27 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// </summary>
         public PieceType Type { get; }
         
-        public Shape Shape { get; }
-
         public Point Position { get; private set; }
-
+        
         public abstract List<Point> MoveablePoints { get; }
 
-        public PieceBase(PieceType type, Point position, Shape shape = null)
+        protected Dictionary<AttributeType, PieceAttribute> Attributes { get; }
+
+        protected PieceBase(PieceType type, Point position, IEnumerable<PieceAttribute> attributes = null)
         {
             Type = type;
             Position = position;
-            Shape = shape ?? new Normal();
+            Attributes = new Dictionary<AttributeType, PieceAttribute>();
+            if (attributes != null)
+            {
+                foreach (var attr in attributes)
+                {
+                    Attributes[attr.Type] = attr;
+                }
+            }
         }
+        
+        public abstract void OnTurnEnd();
 
         public void SetPosition(Point position) => Position = position;
     }

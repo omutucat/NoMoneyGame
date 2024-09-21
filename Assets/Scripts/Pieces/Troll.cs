@@ -12,7 +12,11 @@ namespace NoMoney.Assets.Scripts.Pieces
             new Point(1, 1),
             new Point(0, 1)
         };
-        public Troll(Point position) : base(PieceType.Troll, position, new Abnormal(POSITIONS))
+
+        public Troll(Point position) : base(PieceType.Troll, position, new PieceAttribute[]
+        {
+            new AbnormalShapeAttribute(POSITIONS)
+        })
         {
             
         }
@@ -32,6 +36,10 @@ namespace NoMoney.Assets.Scripts.Pieces
 
                 return points;
             }
+        }
+
+        public override void OnTurnEnd()
+        {
         }
     }
 }

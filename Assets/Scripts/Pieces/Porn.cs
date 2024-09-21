@@ -20,9 +20,12 @@ namespace NoMoney.Assets.Scripts.Pieces
                     new Point(Position.X-1, Position.Y + 1),
                     new Point(Position.X+1, Position.Y + 1)
                 };
-
                 return points;
             }
+        }
+
+        public override void OnTurnEnd()
+        {
         }
     }
 }
