@@ -43,9 +43,9 @@ namespace NoMoney.Assets.Scripts.Board
     {
         public List<PieceBase> Pieces { get; }
 
-        public ObjectList()
+        public ObjectList(List<PieceBase> pieces)
         {
-            Pieces = new List<PieceBase>();
+            Pieces = pieces;
         }
     }
 
