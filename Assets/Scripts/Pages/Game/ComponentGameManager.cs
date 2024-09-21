@@ -7,12 +7,12 @@ namespace NoMoney.Assets.Pages.Game
     {
         IState Update();
         IState OnClick(Point point);
-        bool AcceptsClicks { get; }
+        bool IsAcceptClick { get; }
     }
 
     public class Start : IState
     {
-        public bool AcceptsClicks => false;
+        public bool IsAcceptClick => false;
 
         public IState Update()
         {
@@ -25,7 +25,7 @@ namespace NoMoney.Assets.Pages.Game
 
     public class Select : IState
     {
-        public bool AcceptsClicks => true;
+        public bool IsAcceptClick => true;
 
         public IState Update() => this;
 
@@ -39,7 +39,7 @@ namespace NoMoney.Assets.Pages.Game
 
     public class Move : IState
     {
-        public bool AcceptsClicks => true;
+        public bool IsAcceptClick => true;
 
         public IState Update() => this;
 
@@ -53,7 +53,7 @@ namespace NoMoney.Assets.Pages.Game
 
     public class Calc : IState
     {
-        public bool AcceptsClicks => false;
+        public bool IsAcceptClick => false;
 
         public IState Update()
         {
@@ -80,12 +80,12 @@ namespace NoMoney.Assets.Pages.Game
 
         public void OnButtonClicked(Point point)
         {
-            if (_CurrentState.AcceptsClicks)
+            if (_CurrentState.IsAcceptClick)
             {
                 _CurrentState = _CurrentState.OnClick(point);
             }
         }
 
-        public bool CanAcceptClicks => _CurrentState.AcceptsClicks;
+        public bool CanAcceptClicks => _CurrentState.IsAcceptClick;
     }
 }
