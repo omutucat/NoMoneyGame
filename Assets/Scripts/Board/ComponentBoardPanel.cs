@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NoMoney.Assets.Scripts.Board;
 using NoMoney.Assets.Scripts.Pieces;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,34 +12,27 @@ namespace NoMoney.Assets.Scripts.Board
         public GameObject Square;
         public Point Point;
     }
-    
+
     /// <summary>
     /// 盤面を表示するためのコンポーネント
     /// </summary>
     public class ComponentBoardPanel : MonoBehaviour
     {
-        [SerializeField] private GameObject _BoardSquarePrefab;
         [SerializeField] private List<IBoardEventListener> _BoardEventListeners;
         [SerializeField] private Texture2D MovabletTexture2D;
-        [SerializeField] private GameObject _PiecePrefab;
+        private GameObject _PiecePrefab;
+        private GameObject _BoardSquarePrefab;
 
         // テスト用に外からサイズを指定できるように
         [SerializeField] private int _BoardWidth;
         [SerializeField] private int _BoardHeight;
 
-        private List<SquareObject> _SquareObjects;
-        
+        private List<SquareObject> _SquareObjects = new();
+
         private void Awake()
         {
-            // SerializeFieldで正しくオブジェクトが設定されていることの確認
-            Debug.Assert(_BoardSquarePrefab != null, "BoardSquarePrefab is not set.");
-            Debug.Assert(_PiecePrefab != null, "PiecePrefab is not set.");
-            
-            _SquareObjects = new List<SquareObject>();
-
-#pragma warning disable CS8602 // null 参照の可能性があるものの逆参照です。
-            Debug.Assert(_PiecePrefab.GetComponent<ComponentPiece>() != null, "PiecePrefab does not have ComponentPiece.");
-#pragma warning restore CS8602 // null 参照の可能性があるものの逆参照です。
+            _PiecePrefab = Resources.Load<GameObject>("Prefabs/Piece");
+            _BoardSquarePrefab = Resources.Load<GameObject>("Prefabs/BoardSquare");
         }
 
         public void Initialize(BoardModel board)
@@ -90,7 +82,7 @@ namespace NoMoney.Assets.Scripts.Board
                 CreateBoardSquare(point, squareWidth, squareHeight);
             }
         }
-        
+
         public void ChangeSquareTextureMovable(Point point)
         {
             var square = _SquareObjects.Find(s => s.Point.Equals(point));
@@ -105,9 +97,9 @@ namespace NoMoney.Assets.Scripts.Board
             var positionY = (point.Y * -squareHeight) - squareHeight / 2;
             var positionObj = new Vector3(positionX, positionY, 0);
             var squareObj = Instantiate(_BoardSquarePrefab, this.transform, false);
-            
-            _SquareObjects.Add(new SquareObject {Square = squareObj, Point = point});
-            
+
+            _SquareObjects.Add(new SquareObject { Square = squareObj, Point = point });
+
             var squareRectTransform = squareObj.GetComponent<RectTransform>();
             squareRectTransform.anchoredPosition = positionObj;
             squareRectTransform.sizeDelta = new Vector2(squareWidth, squareHeight);
