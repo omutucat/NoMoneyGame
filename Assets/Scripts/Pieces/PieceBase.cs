@@ -8,6 +8,10 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// </summary>
     public abstract class PieceBase : BoardObject
     {
+        public PieceDirection Direction { get; protected set; }
+
+        public PieceSide Side { get; protected set; }
+
         /// <summary>
         /// 駒の属性
         /// </summary>
@@ -26,12 +30,13 @@ namespace NoMoney.Assets.Scripts.Pieces
         {
             // 駒がImmobilizedの場合は移動できない
             { } when StatusList.Any(s => s == PieceStatus.Immobilized) => new List<Point>(),
-            _ => SpecificMovablePoints
+            _ => CalculateMoveablePoints(Position, SpecificMovablePoints, Direction)
         };
 
-        protected PieceBase(Point position, IEnumerable<PieceStatus>? statusList = null)
+        protected PieceBase(Point position, IEnumerable<PieceStatus>? statusList = null, PieceDirection direction = PieceDirection.Up, PieceSide side = PieceSide.Player) : base(position)
         {
-            Position = position;
+            Direction = direction;
+            Side = side;
             StatusList = statusList?.ToList() ?? new List<PieceStatus>();
         }
 
@@ -42,6 +47,36 @@ namespace NoMoney.Assets.Scripts.Pieces
         public virtual void OnTurnEnd()
         {
         }
+
+        /// <summary>
+        /// 方向を加味して移動可能な座標を計算する
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="moveablePoints"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private static List<Point> CalculateMoveablePoints(Point position, List<Point> moveablePoints, PieceDirection direction) =>
+            moveablePoints.Select(p => direction switch
+            {
+                PieceDirection.Up => new Point(position.X + p.X, position.Y + p.Y),
+                PieceDirection.Down => new Point(position.X - p.X, position.Y - p.Y),
+                _ => throw new System.NotImplementedException()
+            }).ToList();
+    }
+
+    public enum PieceDirection
+    {
+        Up,
+        Down,
+        // Left,
+        // Right
+    }
+
+    public enum PieceSide
+    {
+        Player,
+        Enemy
     }
 }
 

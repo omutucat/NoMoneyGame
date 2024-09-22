@@ -4,11 +4,11 @@ namespace NoMoney.Assets.Scripts.Pieces
 {
     /// <summary>
     /// トロールの駒
-    /// 2×2のマスを占有する
+    /// 2*2のマスを占有する
     /// </summary>
     public class Troll : PieceBase, IAbnormalShape
     {
-        //サイズが2×2で、左上を始点として(+1,0),(+1,+1),(0,+1)の3つのマスを占有する
+        //サイズが2*2で、左上を始点として(+1,0),(+1,+1),(0,+1)の3つのマスを占有する
         private static readonly List<Point> POSITIONS = new()
         {
             new(0, 0),
@@ -28,10 +28,10 @@ namespace NoMoney.Assets.Scripts.Pieces
                 var points = new List<Point>
                 //前後左右に進める
                 {
-                    new(Position.X, Position.Y + 1),
-                    new(Position.X, Position.Y - 1),
-                    new(Position.X - 1, Position.Y),
-                    new(Position.X + 1, Position.Y)
+                    new(0, 1),
+                    new(0, -1),
+                    new(-1, 0),
+                    new(1, 0)
                 };
 
                 return points;

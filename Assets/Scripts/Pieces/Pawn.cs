@@ -11,19 +11,12 @@ namespace NoMoney.Assets.Scripts.Pieces
         {
         }
 
-        protected override List<Point> SpecificMovablePoints
+        protected override List<Point> SpecificMovablePoints => new()
+        //前三方向に進める
         {
-            get
-            {
-                var points = new List<Point>
-                //前三方向に進める
-                {
-                    new(Position.X, Position.Y + 1),
-                    new(Position.X-1, Position.Y + 1),
-                    new(Position.X+1, Position.Y + 1)
-                };
-                return points;
-            }
-        }
+            new(0, 1),
+            new(-1, 1),
+            new(1, 1)
+        };
     }
 }
