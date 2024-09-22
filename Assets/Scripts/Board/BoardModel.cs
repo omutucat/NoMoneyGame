@@ -101,25 +101,22 @@ namespace NoMoney.Assets.Scripts.Board
         {
             var pieces = Objects.Where(o => o is PieceBase).Cast<PieceBase>().ToList();
 
-            // 駒がなければ引き分け
-            if (pieces.Count == 0)
-            {
-                return GameStatus.Draw;
-            }
+            // プレイヤーの駒が上端に到達すれば勝利
+            bool isWin(List<PieceBase> pieces) => pieces.Any(piece => piece.Side == PieceSide.Player && piece.Position.Y == 0);
 
-            // 味方の駒が上端に到達していれば勝利
-            if (Objects.Any(o => o is PieceBase piece && piece.Side == PieceSide.Player && piece.Position.Y == 0))
-            {
-                return GameStatus.Win;
-            }
+            // 敵の駒が下端に到達すれば敗北
+            bool isLose(List<PieceBase> pieces) => pieces.Any(piece => piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1);
 
-            // 敵の駒が下端に到達していれば敗北
-            if (Objects.Any(o => o is PieceBase piece && piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1))
-            {
-                return GameStatus.Lose;
-            }
+            // 駒が全て消えれば引き分け
+            bool isDraw(List<PieceBase> pieces) => pieces.Count == 0;
 
-            return GameStatus.Playing;
+            return pieces switch
+            {
+                { } when isWin(pieces) => GameStatus.Win,
+                { } when isLose(pieces) => GameStatus.Lose,
+                { } when isDraw(pieces) => GameStatus.Draw,
+                _ => GameStatus.Playing
+            };
         }
 
         /// <summary>
