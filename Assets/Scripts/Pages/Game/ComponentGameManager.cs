@@ -20,7 +20,8 @@ namespace NoMoney.Assets.Scripts.Pages.Game
 
         private void Start()
         {
-            _BoardPanel.AddListener(this);
+            _CurrentState = new StartState(this);
+            
         }
 
         private void Update()

@@ -30,7 +30,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
                 _Manager.Board = StageList.GetStage(currentStage) ?? throw new Exception("Stage not found");
 
                 _Manager._BoardPanel.Initialize(_Manager.Board);
-                _Manager._CurrentState = new StartState(_Manager);
+                _Manager._BoardPanel.AddListener(_Manager);
                 Debug.Log("Game initialized with StartState");
 
                 return new SelectState(_Manager);
