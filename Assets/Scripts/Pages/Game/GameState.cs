@@ -18,34 +18,31 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         {
             private ComponentGameManager _Manager;
 
-            public StartState(ComponentGameManager manager)
-            {
-                _Manager = manager;
-            }
+            public StartState(ComponentGameManager manager) => _Manager = manager;
 
             public bool IsAcceptClick => false;
 
             public IGameState Update()
             {
                 // 初期化処理
+                var currentStage = SystemManager.CurrentStage;
+                _Manager.Board = StageList.GetStage(currentStage) ?? throw new Exception("Stage not found");
+
+                _Manager._BoardPanel.Initialize(_Manager.Board);
+                _Manager._CurrentState = new StartState(_Manager);
+                Debug.Log("Game initialized with StartState");
+
                 return new SelectState(_Manager);
             }
 
-            public IGameState OnClick(Point point)
-            {
-                Debug.Log("StartState OnClick triggered at " + point.ToDebugString());
-                return this;
-            }
+            public IGameState OnClick(Point point) => this;
         }
 
         private class SelectState : IGameState
         {
             private ComponentGameManager _Manager;
 
-            public SelectState(ComponentGameManager manager)
-            {
-                _Manager = manager;
-            }
+            public SelectState(ComponentGameManager manager) => _Manager = manager;
 
             public bool IsAcceptClick => true;
 
@@ -118,11 +115,9 @@ namespace NoMoney.Assets.Scripts.Pages.Game
 
             public IGameState Update() => _Manager.Board.JudgeGameState() switch
             {
-                GameStatus.Draw => new EndState(_Manager),
-                GameStatus.Win => new EndState(_Manager),
-                GameStatus.Lose => new EndState(_Manager),
+                GameStatus.Draw | GameStatus.Win | GameStatus.Lose => new EndState(_Manager),
                 GameStatus.Playing => new SelectState(_Manager),
-                _ => new SelectState(_Manager),
+                _ => throw new Exception("Invalid game state"),
             };
 
             public IGameState OnClick(Point point)

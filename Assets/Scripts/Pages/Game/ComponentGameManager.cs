@@ -17,19 +17,6 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         public void MoveScene() => SceneManager.LoadScene("Result");
 
         [SerializeField] private ComponentBoardPanel _BoardPanel;
-        [SerializeField] private int _BoardWidth = 8;
-        [SerializeField] private int _BoardHeight = 8;
-
-        private void Awake()
-        {
-            // TODO: 本来は外部から受け取る
-            var currentStage = SystemManager.CurrentStage;
-            Board = StageList.GetStage(currentStage) ?? throw new Exception("Stage not found");
-
-            _BoardPanel.Initialize(Board);
-            _CurrentState = new StartState(this);
-            Debug.Log("Game initialized with StartState");
-        }
 
         private void Start()
         {
@@ -41,18 +28,15 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             _CurrentState = _CurrentState.Update();
         }
 
-        public bool CanAcceptClicks => _CurrentState.IsAcceptClick;
         public void OnSquareClick(Point point)
         {
-            if (_CurrentState.IsAcceptClick)
+            _CurrentState = _CurrentState.OnClick(point);
+
+            Debug.Log(_CurrentState.IsAcceptClick switch
             {
-                Debug.Log("Click accepted at " + point);
-                _CurrentState = _CurrentState.OnClick(point);
-            }
-            else
-            {
-                Debug.Log("Click not accepted at " + point);
-            }
+                true => "Click accepted at " + point,
+                false => "Click not accepted at " + point
+            });
         }
     }
 }
