@@ -77,7 +77,7 @@ namespace NoMoney.Assets.Scripts.Board
                     default:
                         break;
                 }
-            }
+            }   
         }
 
         /// <summary>
@@ -109,12 +109,60 @@ namespace NoMoney.Assets.Scripts.Board
                 CreateBoardSquare(point, squareWidth, squareHeight);
             }
         }
+        
+        public void ToggleMovableImage(GameObject boardSquare, bool isEnabled)
+        {
+            Image movableImage = GetMovableImageFromBoardSquare(boardSquare);
+            if (movableImage != null)
+            {
+                movableImage.enabled = isEnabled;
+            }
+            else
+            {
+                Debug.LogWarning($"Movable Image not found for board square: {boardSquare.name}");
+            }
+        }
+        
+        private Image GetMovableImageFromBoardSquare(GameObject boardSquare)
+        {
+            // Buttonを見つける
+            Button button = boardSquare.GetComponentInChildren<Button>();
+            if (button == null)
+            {
+                Debug.LogWarning($"Button not found in board square: {boardSquare.name}");
+                return null;
+            }
+
+            // Buttonの子からMovableを見つける
+            Transform movableTransform = button.transform.Find("Movable");
+            if (movableTransform == null)
+            {
+                Debug.LogWarning($"Movable object not found in Button: {button.name}");
+                return null;
+            }
+
+            // MovableからImageコンポーネントを取得
+            Image movableImage = movableTransform.GetComponent<Image>();
+            if (movableImage == null)
+            {
+                Debug.LogWarning($"Image component not found on Movable object: {movableTransform.name}");
+                return null;
+            }
+
+            return movableImage;
+        }
+
+        public void RemoveSquareTexture(Point point)
+        {
+            var square = _SquareObjects.Find(s => s.Point.Equals(point));
+            ToggleMovableImage(square.Square, false);
+
+        }
 
         public void ChangeSquareTextureMovable(Point point)
         {
             var square = _SquareObjects.Find(s => s.Point.Equals(point));
-            var image = square.Square.GetComponentInChildren<Image>();
-            image.sprite = Sprite.Create(MovabletTexture2D, new Rect(0, 0, MovabletTexture2D.width, MovabletTexture2D.height), new Vector2(0.5f, 0.5f));
+            ToggleMovableImage(square.Square, true);
         }
 
         private void CreateBoardSquare(Point point, float squareWidth, float squareHeight)

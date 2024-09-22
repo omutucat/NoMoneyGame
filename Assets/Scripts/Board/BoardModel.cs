@@ -72,7 +72,8 @@ namespace NoMoney.Assets.Scripts.Board
         {
             { } tp and ITeleportable => GetMovablePointsTeleportable(tp),
             { } ghost and IGhost => ghost.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
-            { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p) && GetObjectsAt(p).Count == 0).ToList()
+            { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p) && GetObjectsAt(p).Count == 0).ToList(),
+            _ => new List<Point>()
         };
 
         /// <summary>
