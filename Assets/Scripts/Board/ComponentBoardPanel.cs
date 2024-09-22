@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using NoMoney.Assets.Scripts.Board;
 using NoMoney.Assets.Scripts.Pieces;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +14,7 @@ namespace NoMoney.Assets.Scripts.Board
     public class ComponentBoardPanel : MonoBehaviour
     {
         [SerializeField] private GameObject _BoardSquarePrefab;
+        [SerializeField] private List<BoardEventListener> _BoardEventListeners;
         [SerializeField] private GameObject _PiecePrefab;
 
         // テスト用に外からサイズを指定できるように
@@ -93,6 +96,7 @@ namespace NoMoney.Assets.Scripts.Board
         private void OnSquareClicked(Point point)
         {
             Debug.Log($"Square Clicked: {point.ToDebugString()}");
+            _BoardEventListeners.ForEach(listener => listener.OnSquareClick(point));
         }
     }
 }

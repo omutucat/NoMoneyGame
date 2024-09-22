@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using NoMoney.Assets.Scripts.Pieces;
 
 namespace NoMoney.Assets.Scripts.Board
@@ -34,6 +35,28 @@ namespace NoMoney.Assets.Scripts.Board
             var isExistOverlapping = Objects.GroupBy(o => o.Position).Any(g => g.Where(o => o is not IGhost).Count() > 1);
 
             return !isExistIllegalPosition && !isExistOverlapping;
+        }
+        
+        /// <summary>
+        /// 指定した場所に存在する移動可能な駒を返す　
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        
+        public PieceBase GetMovablePiecesAt(Point point)
+        {
+            // Immobilizedな駒は除外する
+            return Objects.FirstOrDefault(o => o.Position.Equals(point) && !o.isContainStatus(PieceStatus.Immobilized));
+        }
+        
+        /// <summary>
+        /// TODO シャンクス
+        /// 指定した座標のボタンを移動可能な色にする
+        /// </summary>
+        /// <param name="point"></param>
+        public void ColorPiecesMovable(List<Point> points)
+        {
+            
         }
 
         /// <summary>

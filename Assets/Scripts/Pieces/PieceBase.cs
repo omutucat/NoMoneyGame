@@ -51,6 +51,8 @@ namespace NoMoney.Assets.Scripts.Pieces
         }
 
         public void SetPosition(Point position) => Position = position;
+        
+        public bool isContainStatus(PieceStatus status) => StatusList.Contains(status);
     }
 }
 

@@ -6,74 +6,106 @@ using Point = NoMoney.Assets.Scripts.Pieces.Point;
 
 namespace NoMoney.Assets.Pages.Game
 {
-    public interface IState
-    {
-        IState Update();
-        IState OnClick(Point point);
-        bool IsAcceptClick { get; }
-    }
-
-    public class Start : IState
-    {
-        public bool IsAcceptClick => false;
-
-        public IState Update()
-        {
-            // 初期化処理
-            return new Select();
-        }
-
-        public IState OnClick(Point point) => this;
-    }
-
-    public class Select : IState
-    {
-        public bool IsAcceptClick => true;
-
-        public IState Update() => this;
-
-        public IState OnClick(Point point)
-        {
-            // 選択処理
-            // 選択が完了したら新しいStateを返す
-            return new Move();
-        }
-    }
-
-    public class Move : IState
-    {
-        public bool IsAcceptClick => true;
-
-        public IState Update() => this;
-
-        public IState OnClick(Point point)
-        {
-            // 移動処理
-            // 移動が完了したら新しいStateを返す
-            return new Calc();
-        }
-    }
-
-    public class Calc : IState
-    {
-        public bool IsAcceptClick => false;
-
-        public IState Update()
-        {
-            // 計算処理、勝敗判定、ターン切り替え
-            return new Select();
-        }
-
-        public IState OnClick(Point point) => this;
-    }
-
-    public class ComponentGameManager : MonoBehaviour
+    public class ComponentGameManager : MonoBehaviour, BoardEventListener
     {
         private IState _CurrentState;
-        private BoardModel Board { get; set; }
+        public BoardModel Board { get; private set; }
         [SerializeField] private ComponentBoardPanel _BoardPanel;
         [SerializeField] private int _BoardWidth = 8;
         [SerializeField] private int _BoardHeight = 8;
+
+        private interface IState
+        {
+            IState Update();
+            IState OnClick(Point point);
+            bool IsAcceptClick { get; }
+        }
+
+        private class StartState : IState
+        {
+            private ComponentGameManager _manager;
+
+            public StartState(ComponentGameManager manager)
+            {
+                _manager = manager;
+            }
+
+            public bool IsAcceptClick => false;
+
+            public IState Update()
+            {
+                // 初期化処理
+                return new SelectState(_manager);
+            }
+
+            public IState OnClick(Point point) => this;
+        }
+
+        private class SelectState : IState
+        {
+            private ComponentGameManager _manager;
+
+            public SelectState(ComponentGameManager manager)
+            {
+                _manager = manager;
+            }
+
+            public bool IsAcceptClick => true;
+
+            public IState Update() => this;
+
+            public IState OnClick(Point point)
+            {
+                //　クリックされた座標の駒を取得
+                var obj = _manager.Board.GetMovablePiecesAt(point);
+                // 駒が無ければ何もしない
+                if(obj == null) return this;
+                // 駒があれば移動可能なマスを着色
+                _manager.Board.ColorPiecesMovable(_manager.Board.GetMovablePoints(obj));
+                return new MoveState(_manager);
+            }
+        }
+
+        private class MoveState : IState
+        {
+            private ComponentGameManager _manager;
+
+            public MoveState(ComponentGameManager manager)
+            {
+                _manager = manager;
+            }
+
+            public bool IsAcceptClick => true;
+
+            public IState Update() => this;
+
+            public IState OnClick(Point point)
+            {
+                // 移動処理
+                // 移動が完了したら新しいStateを返す
+                return new CalcState(_manager);
+            }
+        }
+
+        private class CalcState : IState
+        {
+            private ComponentGameManager _manager;
+
+            public CalcState(ComponentGameManager manager)
+            {
+                _manager = manager;
+            }
+
+            public bool IsAcceptClick => false;
+
+            public IState Update()
+            {
+                // 計算処理、勝敗判定、ターン切り替え
+                return new SelectState(_manager);
+            }
+
+            public IState OnClick(Point point) => this;
+        }
 
         private void Start()
         {
@@ -88,22 +120,21 @@ namespace NoMoney.Assets.Pages.Game
 
             _BoardPanel.Initialize(Board);
 
-            _CurrentState = new Start();
+            _CurrentState = new StartState(this);
         }
 
         private void Update()
         {
             _CurrentState = _CurrentState.Update();
         }
-
-        public void OnButtonClicked(Point point)
+        
+        public bool CanAcceptClicks => _CurrentState.IsAcceptClick;
+        public void OnSquareClick(Point point)
         {
             if (_CurrentState.IsAcceptClick)
             {
                 _CurrentState = _CurrentState.OnClick(point);
             }
         }
-
-        public bool CanAcceptClicks => _CurrentState.IsAcceptClick;
     }
 }
