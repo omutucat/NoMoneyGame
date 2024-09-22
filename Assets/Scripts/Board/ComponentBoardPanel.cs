@@ -13,6 +13,7 @@ namespace NoMoney.Assets.Scripts.Board
     public class ComponentBoardPanel : MonoBehaviour
     {
         [SerializeField] private GameObject _BoardSquarePrefab;
+        [SerializeField] private List<BoardEventListener> _BoardEventListeners ;
 
         // テスト用に外からサイズを指定できるように
         [SerializeField] private int _BoardWidth;
@@ -84,6 +85,7 @@ namespace NoMoney.Assets.Scripts.Board
         private void OnSquareClicked(Point point)
         {
             Debug.Log($"Square Clicked: {point.ToDebugString()}");
+            _BoardEventListeners.ForEach(listener => listener.OnSquareClick(point));
         }
     }
 }
