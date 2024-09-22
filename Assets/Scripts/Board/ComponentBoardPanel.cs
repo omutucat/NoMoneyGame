@@ -120,16 +120,10 @@ namespace NoMoney.Assets.Scripts.Board
         private void CreateBoardSquare(Point point, float squareWidth, float squareHeight)
         {
             // 座標を計算してオブジェクトを生成
-            var positionX = (point.X * squareWidth) + squareWidth / 2;
-            var positionY = (point.Y * -squareHeight) - squareHeight / 2;
-            var positionObj = new Vector3(positionX, positionY, 0);
             var squareObj = Instantiate(_BoardSquarePrefab, this.transform, false);
+            squareObj.GetComponent<ComponentSquare>().Initialize(point, squareWidth, squareHeight);
 
             _SquareObjects.Add(new SquareObject { Square = squareObj, Point = point });
-
-            var squareRectTransform = squareObj.GetComponent<RectTransform>();
-            squareRectTransform.anchoredPosition = positionObj;
-            squareRectTransform.sizeDelta = new Vector2(squareWidth, squareHeight);
 
             var button = squareObj.GetComponentInChildren<Button>();
             button.onClick.AddListener(() => OnSquareClicked(point));
