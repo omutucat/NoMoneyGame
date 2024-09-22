@@ -1,5 +1,8 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using NoMoney.Assets.Scripts.Board;
+using NoMoney.Assets.Scripts.Pieces;
 using UnityEngine;
+using Point = NoMoney.Assets.Scripts.Pieces.Point;
 
 namespace NoMoney.Assets.Pages.Game
 {
@@ -67,9 +70,24 @@ namespace NoMoney.Assets.Pages.Game
     public class ComponentGameManager : MonoBehaviour
     {
         private IState _CurrentState;
+        private BoardModel Board { get; set; }
+        [SerializeField] private ComponentBoardPanel _BoardPanel;
+        [SerializeField] private int _BoardWidth = 8;
+        [SerializeField] private int _BoardHeight = 8;
 
         private void Start()
         {
+            // TODO: 本来は外部から受け取る
+            var size = new BoardSize(_BoardWidth, _BoardHeight);
+            var pieces = new List<PieceBase>
+            {
+                new Pawn(new Point(0, 0)),
+                new Pawn(new Point(1, 0)),
+            };
+            Board = new BoardModel(size, pieces);
+
+            _BoardPanel.Initialize(Board);
+
             _CurrentState = new Start();
         }
 

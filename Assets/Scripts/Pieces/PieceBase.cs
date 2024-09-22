@@ -16,6 +16,8 @@ namespace NoMoney.Assets.Scripts.Pieces
             X = x;
             Y = y;
         }
+
+        public string ToDebugString() => $"({X}, {Y})";
     }
 
     /// <summary>
