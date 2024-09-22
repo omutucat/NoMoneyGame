@@ -25,5 +25,7 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// 駒の位置
         /// </summary>
         public Point Position { get; protected set; }
+
+        protected BoardObject(Point position) => Position = position;
     }
 }

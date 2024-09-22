@@ -16,31 +16,19 @@ namespace NoMoney.Assets.Scripts.Pieces
         {
         }
 
-        protected override List<Point> SpecificMovablePoints
-        {
-            get
+        protected override List<Point> SpecificMovablePoints =>
+            // 8方向全てに進める
+            new()
             {
-                if (_TurnCount < IMMOBILE_TURNS)
-                {
-                    return new List<Point>(); // 動けないので空のリストを返す
-                }
-                else
-                {
-                    // 8方向全てに進める
-                    return new List<Point>
-                    {
-                        new(Position.X + 1, Position.Y),
-                        new(Position.X - 1, Position.Y),
-                        new(Position.X, Position.Y + 1),
-                        new(Position.X, Position.Y - 1),
-                        new(Position.X + 1, Position.Y + 1),
-                        new(Position.X + 1, Position.Y - 1),
-                        new(Position.X - 1, Position.Y + 1),
-                        new(Position.X - 1, Position.Y - 1),
-                    };
-                }
-            }
-        }
+                new(1, 0),
+                new(-1, 0),
+                new(0, 1),
+                new(0, -1),
+                new(1, 1),
+                new(1, -1),
+                new(-1, 1),
+                new(-1, -1),
+            };
 
         public override void OnTurnEnd()
         {
