@@ -8,24 +8,35 @@ using static System.Linq.Enumerable;
 
 namespace NoMoney.Assets.Scripts.Board
 {
+    public struct SquareObject
+    {
+        public GameObject Square;
+        public Point Point;
+    }
+    
     /// <summary>
     /// 盤面を表示するためのコンポーネント
     /// </summary>
     public class ComponentBoardPanel : MonoBehaviour
     {
         [SerializeField] private GameObject _BoardSquarePrefab;
-        [SerializeField] private List<BoardEventListener> _BoardEventListeners;
+        [SerializeField] private List<IBoardEventListener> _BoardEventListeners;
+        [SerializeField] private Texture2D MovabletTexture2D;
         [SerializeField] private GameObject _PiecePrefab;
 
         // テスト用に外からサイズを指定できるように
         [SerializeField] private int _BoardWidth;
         [SerializeField] private int _BoardHeight;
 
+        private List<SquareObject> _SquareObjects;
+        
         private void Awake()
         {
             // SerializeFieldで正しくオブジェクトが設定されていることの確認
             Debug.Assert(_BoardSquarePrefab != null, "BoardSquarePrefab is not set.");
             Debug.Assert(_PiecePrefab != null, "PiecePrefab is not set.");
+            
+            _SquareObjects = new List<SquareObject>();
 
 #pragma warning disable CS8602 // null 参照の可能性があるものの逆参照です。
             Debug.Assert(_PiecePrefab.GetComponent<ComponentPiece>() != null, "PiecePrefab does not have ComponentPiece.");
@@ -49,6 +60,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// <summary>
         /// 盤面に存在するオブジェクトを生成する
         /// </summary>
+        /// <param name="board"></param>
         /// <param name="squareWidth"></param>
         /// <param name="squareHeight"></param>
         private void CreateBoardObjects(BoardModel board, float squareWidth, float squareHeight)
@@ -65,6 +77,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// <summary>
         /// 盤面のマスを生成する
         /// </summary>
+        /// <param name="board"></param>
         /// <param name="squareWidth"></param>
         /// <param name="squareHeight"></param>
         private void CreateBoardSquares(BoardModel board, float squareWidth, float squareHeight)
@@ -77,6 +90,13 @@ namespace NoMoney.Assets.Scripts.Board
                 CreateBoardSquare(point, squareWidth, squareHeight);
             }
         }
+        
+        public void ChangeSquareTextureMovable(Point point)
+        {
+            var square = _SquareObjects.Find(s => s.Point.Equals(point));
+            var image = square.Square.GetComponentInChildren<Image>();
+            image.sprite = Sprite.Create(MovabletTexture2D, new Rect(0, 0, MovabletTexture2D.width, MovabletTexture2D.height), new Vector2(0.5f, 0.5f));
+        }
 
         private void CreateBoardSquare(Point point, float squareWidth, float squareHeight)
         {
@@ -85,7 +105,9 @@ namespace NoMoney.Assets.Scripts.Board
             var positionY = (point.Y * -squareHeight) - squareHeight / 2;
             var positionObj = new Vector3(positionX, positionY, 0);
             var squareObj = Instantiate(_BoardSquarePrefab, this.transform, false);
-
+            
+            _SquareObjects.Add(new SquareObject {Square = squareObj, Point = point});
+            
             var squareRectTransform = squareObj.GetComponent<RectTransform>();
             squareRectTransform.anchoredPosition = positionObj;
             squareRectTransform.sizeDelta = new Vector2(squareWidth, squareHeight);

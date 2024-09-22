@@ -6,10 +6,11 @@ using Point = NoMoney.Assets.Scripts.Pieces.Point;
 
 namespace NoMoney.Assets.Pages.Game
 {
-    public class ComponentGameManager : MonoBehaviour, BoardEventListener
+    public class ComponentGameManager : MonoBehaviour, IBoardEventListener
     {
         private IState _CurrentState;
         public BoardModel Board { get; private set; }
+        private List<Point> MovablePoints = new List<Point>();
         [SerializeField] private ComponentBoardPanel _BoardPanel;
         [SerializeField] private int _BoardWidth = 8;
         [SerializeField] private int _BoardHeight = 8;
@@ -62,7 +63,12 @@ namespace NoMoney.Assets.Pages.Game
                 if (obj == null)
                     return this;
                 // 駒があれば移動可能なマスを着色
-                _manager.Board.ColorPiecesMovable(_manager.Board.GetMovablePoints(obj));
+                foreach(var movablePoint in _manager.Board.GetMovablePoints(obj))
+                { 
+                    _manager.MovablePoints.Add(movablePoint);
+                    _manager._BoardPanel.ChangeSquareTextureMovable(movablePoint);
+                }
+                
                 return new MoveState(_manager);
             }
         }
@@ -82,7 +88,11 @@ namespace NoMoney.Assets.Pages.Game
 
             public IState OnClick(Point point)
             {
-                // 移動処理
+                //移動可能なマスでなければ何もしない
+                if(!_manager.MovablePoints.Contains(point)) return this;
+                // TODO 移動処理
+                
+                
                 // 移動が完了したら新しいStateを返す
                 return new CalcState(_manager);
             }
@@ -108,7 +118,7 @@ namespace NoMoney.Assets.Pages.Game
             public IState OnClick(Point point) => this;
         }
 
-        private void Start()
+        private void Awake()
         {
             // TODO: 本来は外部から受け取る
             var size = new BoardSize(_BoardWidth, _BoardHeight);
