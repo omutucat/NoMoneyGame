@@ -12,7 +12,6 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         {
             IGameState Update();
             IGameState OnClick(Point point);
-            bool IsAcceptClick { get; }
         }
 
         private class StartState : IGameState
@@ -20,8 +19,6 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             private ComponentGameManager _Manager;
 
             public StartState(ComponentGameManager manager) => _Manager = manager;
-
-            public bool IsAcceptClick => false;
 
             public IGameState Update()
             {
@@ -45,29 +42,24 @@ namespace NoMoney.Assets.Scripts.Pages.Game
 
             public SelectState(ComponentGameManager manager) => _Manager = manager;
 
-            public bool IsAcceptClick => true;
-
             public IGameState Update() => this;
 
             public IGameState OnClick(Point point)
             {
                 Debug.Log("SelectState OnClick triggered at " + point.ToDebugString());
+
                 // クリックされた座標の駒を取得
                 var obj = _Manager.Board.GetMovablePiecesAt(point);
+
                 // 駒が無ければ何もしない
-                if (obj == null)
+                if (obj is null)
                 {
                     Debug.Log("No piece found at " + point.ToDebugString());
                     return this;
                 }
-                // 駒があれば移動可能なマスを着色
-                foreach (var movablePoint in _Manager.Board.GetMovablePoints(obj))
-                {
-                    _Manager._MovablePoints.Add(movablePoint);
-                    _Manager._BoardPanel.ChangeSquareTextureMovable(movablePoint);
-                }
-                _Manager._SelectedPiece = obj;
-                Debug.Log("Movable points: " + string.Join(", ", _Manager._MovablePoints));
+
+                _Manager.SelectedPiece = obj;
+
                 return new MoveState(_Manager);
             }
         }
@@ -76,53 +68,42 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         {
             private ComponentGameManager _Manager;
 
-            public MoveState(ComponentGameManager manager)
-            {
-                _Manager = manager;
-            }
-
-            public bool IsAcceptClick => true;
+            public MoveState(ComponentGameManager manager) => _Manager = manager;
 
             public IGameState Update() => this;
 
             public IGameState OnClick(Point point)
             {
                 Debug.Log("MoveState OnClick triggered at " + point.ToDebugString());
-                //別の味方駒をクリックした時なら、Movableを出し直してMoveに戻る
-                var obj = _Manager.Board.GetMovablePiecesAt(point);
-                if (obj != null && obj != _Manager._SelectedPiece)
+
+                // クリックされた座標の駒を取得
+                var clickedPiece = _Manager.Board.GetMovablePiecesAt(point);
+
+                if (clickedPiece == _Manager.SelectedPiece)
                 {
-                    _Manager._SelectedPiece = obj;
-                    foreach (var movablePoint in _Manager._MovablePoints)
-                    {
-                        //脱色
-                        _Manager._BoardPanel.RemoveSquareTexture(movablePoint);
-                    }
-                    //移動リストを消す
-                    _Manager._MovablePoints = new List<Point>();
-                    foreach (var movablePoint in _Manager.Board.GetMovablePoints(obj))
-                    {
-                        _Manager._MovablePoints.Add(movablePoint);
-                        //着色
-                        _Manager._BoardPanel.ChangeSquareTextureMovable(movablePoint);
-                    }
+                    // 選択中の駒と同じなら何もしない
+                    return this;
+                }
+
+                if (clickedPiece is not null)
+                {
+                    // 選択中の駒と違う駒がクリックされた場合
+                    _Manager.SelectedPiece = clickedPiece;
+
                     return new MoveState(_Manager);
                 }
+
                 //移動可能なマスでなければ何もしない
-                if (!_Manager._MovablePoints.Contains(point))
+                if (!_Manager.MovablePoints.Contains(point))
                 {
                     Debug.Log("Invalid move: " + point.ToDebugString() + " is not in movable points");
                     return this;
                 }
-                _Manager.Board.MovePiece(_Manager._SelectedPiece, point);
-                foreach (var movablePoint in _Manager._MovablePoints)
-                {
-                    //脱色
-                    _Manager._BoardPanel.RemoveSquareTexture(movablePoint);
-                }
-                _Manager._MovablePoints = new List<Point>();
+
+                _Manager.Board.MovePiece(_Manager.SelectedPiece, point);
                 Debug.Log("Valid move to " + point);
 
+                _Manager.SelectedPiece = null;
 
                 // 移動が完了したら新しいStateを返す
                 return new CalcState(_Manager);
@@ -138,13 +119,9 @@ namespace NoMoney.Assets.Scripts.Pages.Game
                 _Manager = manager;
             }
 
-            public bool IsAcceptClick => false;
-
             public IGameState Update() => _Manager.Board.JudgeGameState() switch
             {
-                GameStatus.Win => new EndState(_Manager),
-                GameStatus.Lose => new EndState(_Manager),
-                GameStatus.Draw => new EndState(_Manager),
+                GameStatus.Win or GameStatus.Lose or GameStatus.Draw => new EndState(_Manager),
                 GameStatus.Playing => new SelectState(_Manager),
                 _ => throw new Exception("Invalid game state"),
             };
@@ -164,8 +141,6 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             {
                 _Manager = manager;
             }
-
-            public bool IsAcceptClick => false;
 
             public IGameState Update()
             {

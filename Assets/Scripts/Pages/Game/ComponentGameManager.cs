@@ -10,34 +10,40 @@ namespace NoMoney.Assets.Scripts.Pages.Game
 {
     public partial class ComponentGameManager : MonoBehaviour, IBoardEventListener
     {
-        private IGameState _CurrentState;
+        private IGameState CurrentState { get; set; }
         public BoardModel Board { get; private set; }
-        private List<Point> _MovablePoints = new List<Point>();
+        [SerializeField] private ComponentBoardPanel _BoardPanel;
+        private List<Point> _MovablePoints = new();
         private Piece _SelectedPiece = null;
+
+        private Piece SelectedPiece
+        {
+            get => _SelectedPiece;
+            set
+            {
+                // 駒が選択された時に移動可能なマスを更新
+                _SelectedPiece = value;
+                MovablePoints = value is null ? new List<Point>() : Board.GetMovablePoints(value);
+            }
+        }
+
+        private List<Point> MovablePoints
+        {
+            get => _MovablePoints;
+            set
+            {
+                _MovablePoints = value;
+
+                // 移動可能マスが更新されたらパネルに反映
+                _BoardPanel.SetMovableSquares(value);
+            }
+        }
         public void MoveScene() => SceneManager.LoadScene("Result");
 
-        [SerializeField] private ComponentBoardPanel _BoardPanel;
+        private void Start() => CurrentState = new StartState(this);
 
-        private void Start()
-        {
-            _CurrentState = new StartState(this);
-            
-        }
+        private void Update() => CurrentState = CurrentState.Update();
 
-        private void Update()
-        {
-            _CurrentState = _CurrentState.Update();
-        }
-
-        public void OnSquareClick(Point point)
-        {
-            _CurrentState = _CurrentState.OnClick(point);
-
-            Debug.Log(_CurrentState.IsAcceptClick switch
-            {
-                true => "Click accepted at " + point,
-                false => "Click not accepted at " + point
-            });
-        }
+        public void OnSquareClick(Point point) => CurrentState = CurrentState.OnClick(point);
     }
 }

@@ -1,42 +1,71 @@
+using System.Collections.Generic;
 using NoMoney.Assets.Scripts.Pieces;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace NoMoney.Assets.Scripts.Board
 {
     public class ComponentSquare : MonoBehaviour
     {
-        private Point _Position;
-        private float _SquareWidth;
-        private float _SquareHeight;
-        private RectTransform _MyTransform;
-        private bool _IsInitialized = false;
+        private Point Position { get; set; }
+        private float SquareWidth { get; set; }
+        private float SquareHeight { get; set; }
+        private RectTransform MyTransform { get; set; }
+        private List<GameObject> Frames { get; set; } = new List<GameObject>();
+        private bool IsInitialized { get; set; } = false;
 
         private void Start()
         {
-            _MyTransform = GetComponent<RectTransform>();
-            _MyTransform.sizeDelta = new Vector2(_SquareWidth, _SquareHeight);
+            MyTransform = GetComponent<RectTransform>();
+            MyTransform.sizeDelta = new Vector2(SquareWidth, SquareHeight);
+
+            Frames.Add(transform.Find("Frame").Find("Selected").gameObject);
+            Frames.Add(transform.Find("Frame").Find("Movable").gameObject);
+
             PositionUpdate();
         }
 
         public void Initialize(Point position, float squareWidth, float squareHeight)
         {
-            if (_IsInitialized)
+            if (IsInitialized)
             {
                 return;
             }
 
-            _Position = position;
-            _SquareWidth = squareWidth;
-            _SquareHeight = squareHeight;
-            _IsInitialized = true;
+            Position = position;
+            SquareWidth = squareWidth;
+            SquareHeight = squareHeight;
+            IsInitialized = true;
         }
 
         private void PositionUpdate()
         {
-            var positionX = (_Position.X * _SquareWidth) + _SquareWidth / 2;
-            var positionY = (_Position.Y * -_SquareHeight) - _SquareHeight / 2;
+            var positionX = (Position.X * SquareWidth) + SquareWidth / 2;
+            var positionY = (Position.Y * -SquareHeight) - SquareHeight / 2;
             var positionVector = new Vector3(positionX, positionY, 0);
-            _MyTransform.anchoredPosition = positionVector;
+            MyTransform.anchoredPosition = positionVector;
         }
+
+        public void SetFrameState(SquareState state)
+        {
+            foreach (var frame in Frames)
+            {
+                frame.SetActive(false);
+            }
+
+            if (state == SquareState.Normal)
+            {
+                return;
+            }
+
+            Frames[(int)state].SetActive(true);
+        }
+    }
+
+    public enum SquareState
+    {
+        Normal = -1,
+        Selected = 0,
+        Movable = 1
     }
 }

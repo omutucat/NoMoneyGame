@@ -19,7 +19,6 @@ namespace NoMoney.Assets.Scripts.Board
     public class ComponentBoardPanel : MonoBehaviour
     {
         [SerializeField] private List<IBoardEventListener> _BoardEventListeners;
-        [SerializeField] private Texture2D MovabletTexture2D;
         private GameObject _PiecePrefab;
         private GameObject _BoardSquarePrefab;
 
@@ -77,7 +76,7 @@ namespace NoMoney.Assets.Scripts.Board
                     default:
                         break;
                 }
-            }   
+            }
         }
 
         /// <summary>
@@ -109,66 +108,35 @@ namespace NoMoney.Assets.Scripts.Board
                 CreateBoardSquare(point, squareWidth, squareHeight);
             }
         }
-        
-        public void ToggleMovableImage(GameObject boardSquare, bool isEnabled)
+
+        public void SetMovableSquares(List<Point> points)
         {
-            Image movableImage = GetMovableImageFromBoardSquare(boardSquare);
-            if (movableImage != null)
+            ResetSquareStates();
+
+            foreach (var point in points)
             {
-                movableImage.enabled = isEnabled;
-            }
-            else
-            {
-                Debug.LogWarning($"Movable Image not found for board square: {boardSquare.name}");
+                SetSquareState(point, SquareState.Movable);
             }
         }
-        
-        private Image GetMovableImageFromBoardSquare(GameObject boardSquare)
+
+        public void ResetSquareStates()
         {
-            // Buttonを見つける
-            Button button = boardSquare.GetComponentInChildren<Button>();
-            if (button == null)
+            foreach (var square in _SquareObjects)
             {
-                Debug.LogWarning($"Button not found in board square: {boardSquare.name}");
-                return null;
+                SetSquareState(square.Point, SquareState.Normal);
             }
-
-            // Buttonの子からMovableを見つける
-            Transform movableTransform = button.transform.Find("Movable");
-            if (movableTransform == null)
-            {
-                Debug.LogWarning($"Movable object not found in Button: {button.name}");
-                return null;
-            }
-
-            // MovableからImageコンポーネントを取得
-            Image movableImage = movableTransform.GetComponent<Image>();
-            if (movableImage == null)
-            {
-                Debug.LogWarning($"Image component not found on Movable object: {movableTransform.name}");
-                return null;
-            }
-
-            return movableImage;
         }
 
-        public void RemoveSquareTexture(Point point)
+        public void SetSquareState(Point point, SquareState state)
         {
             var square = _SquareObjects.Find(s => s.Point.Equals(point));
-            ToggleMovableImage(square.Square, false);
-
-        }
-
-        public void ChangeSquareTextureMovable(Point point)
-        {
-            var square = _SquareObjects.Find(s => s.Point.Equals(point));
-            ToggleMovableImage(square.Square, true);
+            square.Square.GetComponent<ComponentSquare>().SetFrameState(state);
         }
 
         private void CreateBoardSquare(Point point, float squareWidth, float squareHeight)
         {
             // 座標を計算してオブジェクトを生成
-            var squareObj = Instantiate(_BoardSquarePrefab, this.transform, false);
+            var squareObj = Instantiate(_BoardSquarePrefab, transform, false);
             squareObj.GetComponent<ComponentSquare>().Initialize(point, squareWidth, squareHeight);
 
             _SquareObjects.Add(new SquareObject { Square = squareObj, Point = point });
