@@ -13,7 +13,7 @@ namespace NoMoney.Assets.Pages.Game
         public BoardModel Board { get; private set; }
         private List<Point> MovablePoints = new List<Point>();
         private PieceBase _SelectedPiece = null;
-        
+
         [SerializeField] private ComponentBoardPanel _BoardPanel;
         [SerializeField] private int _BoardWidth = 8;
         [SerializeField] private int _BoardHeight = 8;
@@ -74,8 +74,8 @@ namespace NoMoney.Assets.Pages.Game
                     return this;
                 }
                 // 駒があれば移動可能なマスを着色
-                foreach(var movablePoint in _manager.Board.GetMovablePoints(obj))
-                { 
+                foreach (var movablePoint in _manager.Board.GetMovablePoints(obj))
+                {
                     _manager.MovablePoints.Add(movablePoint);
                     _manager._BoardPanel.ChangeSquareTextureMovable(movablePoint);
                 }
@@ -102,7 +102,7 @@ namespace NoMoney.Assets.Pages.Game
             {
                 Debug.Log("MoveState OnClick triggered at " + point.ToDebugString());
                 //移動可能なマスでなければ何もしない
-                if(!_manager.MovablePoints.Contains(point))
+                if (!_manager.MovablePoints.Contains(point))
                 {
                     Debug.Log("Invalid move: " + point.ToDebugString() + " is not in movable points");
                     return this;
@@ -110,8 +110,8 @@ namespace NoMoney.Assets.Pages.Game
                 // TODO 移動処理
                 _manager.Board.MovePiece(_manager._SelectedPiece, point);
                 Debug.Log("Valid move to " + point);
-                
-                
+
+
                 // 移動が完了したら新しいStateを返す
                 return new CalcState(_manager);
             }
@@ -130,7 +130,7 @@ namespace NoMoney.Assets.Pages.Game
 
             public IState Update()
             {
-                switch (_manager.Board.IsGameEnd())
+                switch (_manager.Board.JudgeGameState())
                 {
                     case GameStatus.Draw:
                         return new EndState(_manager);
@@ -151,7 +151,7 @@ namespace NoMoney.Assets.Pages.Game
                 return this;
             }
         }
-        
+
         private class EndState : IState
         {
             private ComponentGameManager _manager;
@@ -174,7 +174,7 @@ namespace NoMoney.Assets.Pages.Game
                 return this;
             }
         }
-                
+
 
         private void Awake()
         {
@@ -188,8 +188,8 @@ namespace NoMoney.Assets.Pages.Game
             Board = new BoardModel(size, pieces);
 
             _BoardPanel.Initialize(Board);
-            
-            
+
+
 
             _CurrentState = new StartState(this);
             Debug.Log("Game initialized with StartState");

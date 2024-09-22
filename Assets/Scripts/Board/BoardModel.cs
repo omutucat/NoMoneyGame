@@ -11,7 +11,7 @@ namespace NoMoney.Assets.Scripts.Board
         Lose,
         Draw
     }
-    
+
     /// <summary>
     /// 盤面を表すクラス
     /// </summary>
@@ -93,25 +93,35 @@ namespace NoMoney.Assets.Scripts.Board
             return points;
         }
 
-        
         /// <summary>
-        /// 勝利状態になっているかを返す
+        /// ゲームの状態を判定する
         /// </summary>
         /// <returns></returns>
-        public GameStatus IsGameEnd()
+        public GameStatus JudgeGameState()
         {
-            //オブジェクトが一個も無ければゲーム終了
-            if(Objects.Count == 0)
+            var pieces = Objects.Where(o => o is PieceBase).Cast<PieceBase>().ToList();
+
+            // 駒がなければ引き分け
+            if (pieces.Count == 0)
             {
                 return GameStatus.Draw;
             }
-            //勝利条件を満たしているか
-            if (true)
+
+            // 味方の駒が上端に到達していれば勝利
+            if (Objects.Any(o => o is PieceBase piece && piece.Side == PieceSide.Player && piece.Position.Y == 0))
             {
                 return GameStatus.Win;
             }
+
+            // 敵の駒が下端に到達していれば敗北
+            if (Objects.Any(o => o is PieceBase piece && piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1))
+            {
+                return GameStatus.Lose;
+            }
+
+            return GameStatus.Playing;
         }
-        
+
         /// <summary>
         /// 駒を動かす
         /// </summary>
