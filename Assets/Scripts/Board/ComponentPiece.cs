@@ -13,7 +13,7 @@ namespace NoMoney.Assets.Scripts.Board
         private float _SquareWidth;
         private float _SquareHeight;
         private RectTransform _MyTransform;
-        private bool _IsInitialized;
+        private bool _IsInitialized = false;
 
         private void Start()
         {
@@ -25,6 +25,12 @@ namespace NoMoney.Assets.Scripts.Board
             var texture = PieceTextures.PieceTexture(_Piece);
             var image = GetComponent<Image>();
             image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+            // 敵か味方かに応じて色を変更
+            if (_Piece.Side == PieceSide.Enemy)
+            {
+                image.color = new Color(1, 0, 0, 1);
+            }
 
             // 位置の更新
             PositionUpdate();
