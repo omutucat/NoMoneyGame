@@ -142,7 +142,9 @@ namespace NoMoney.Assets.Scripts.Pages.Game
 
             public IGameState Update() => _Manager.Board.JudgeGameState() switch
             {
-                GameStatus.Draw | GameStatus.Win | GameStatus.Lose => new EndState(_Manager),
+                GameStatus.Win => new EndState(_Manager),
+                GameStatus.Lose => new EndState(_Manager),
+                GameStatus.Draw => new EndState(_Manager),
                 GameStatus.Playing => new SelectState(_Manager),
                 _ => throw new Exception("Invalid game state"),
             };
