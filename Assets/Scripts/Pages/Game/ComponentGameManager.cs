@@ -13,7 +13,7 @@ namespace NoMoney.Assets.Pages.Game
         private IState _CurrentState;
         public BoardModel Board { get; private set; }
         private List<Point> MovablePoints = new List<Point>();
-        private PieceBase _SelectedPiece = null;
+        private Piece _SelectedPiece = null;
         public void MoveScene() => SceneManager.LoadScene("Result");
 
         [SerializeField] private ComponentBoardPanel _BoardPanel;

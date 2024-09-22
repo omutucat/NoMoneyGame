@@ -6,7 +6,7 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// トロールの駒
     /// 2*2のマスを占有する
     /// </summary>
-    public class Troll : PieceBase, IAbnormalShape
+    public class Troll : Piece, IAbnormalShape
     {
         //サイズが2*2で、左上を始点として(+1,0),(+1,+1),(0,+1)の3つのマスを占有する
         private static readonly List<Point> POSITIONS = new()

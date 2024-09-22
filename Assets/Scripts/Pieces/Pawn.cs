@@ -5,7 +5,7 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// <summary>
     /// ポーンの駒
     /// </summary>
-    public class Pawn : PieceBase
+    public class Pawn : Piece
     {
         public Pawn(Point position) : base(position)
         {

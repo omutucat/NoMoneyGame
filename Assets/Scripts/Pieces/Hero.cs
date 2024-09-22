@@ -7,7 +7,7 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// 5ターン目まで動けない
     /// 盤面の端に到達すると、反対側の端にワープする
     /// </summary>
-    public class Hero : PieceBase, ITeleportable
+    public class Hero : Piece, ITeleportable
     {
         private int _TurnCount = 0;
         private const int IMMOBILE_TURNS = 5;

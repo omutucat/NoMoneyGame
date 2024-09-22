@@ -9,7 +9,7 @@ namespace NoMoney.Assets.Scripts.Board
     /// </summary>
     public class ComponentPiece : MonoBehaviour
     {
-        private PieceBase _Piece;
+        private Piece _Piece;
         private float _SquareWidth;
         private float _SquareHeight;
         private RectTransform _MyTransform;
@@ -47,7 +47,7 @@ namespace NoMoney.Assets.Scripts.Board
             _MyTransform.anchoredPosition = positionVector;
         }
 
-        public void Initialize(PieceBase piece, float squareWidth, float squareHeight)
+        public void Initialize(Piece piece, float squareWidth, float squareHeight)
         {
             if (_IsInitialized)
             {

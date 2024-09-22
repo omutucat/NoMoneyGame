@@ -6,7 +6,7 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// <summary>
     /// 駒の基底クラス
     /// </summary>
-    public abstract class PieceBase : BoardObject
+    public abstract class Piece : BoardObject
     {
         public PieceDirection Direction { get; protected set; }
 
@@ -33,7 +33,7 @@ namespace NoMoney.Assets.Scripts.Pieces
             _ => CalculateMoveablePoints(Position, SpecificMovablePoints, Direction)
         };
 
-        protected PieceBase(Point position, IEnumerable<PieceStatus>? statusList = null, PieceDirection direction = PieceDirection.Up, PieceSide side = PieceSide.Player) : base(position)
+        protected Piece(Point position, IEnumerable<PieceStatus>? statusList = null, PieceDirection direction = PieceDirection.Up, PieceSide side = PieceSide.Player) : base(position)
         {
             Direction = direction;
             Side = side;

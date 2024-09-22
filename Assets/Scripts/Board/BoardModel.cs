@@ -49,9 +49,9 @@ namespace NoMoney.Assets.Scripts.Board
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public PieceBase GetMovablePiecesAt(Point point)
+        public Piece GetMovablePiecesAt(Point point)
         {
-            var pieces = Objects.Where(o => o.Position.Equals(point) && o is PieceBase).Cast<PieceBase>().ToList();
+            var pieces = Objects.Where(o => o.Position.Equals(point) && o is Piece).Cast<Piece>().ToList();
             return pieces.FirstOrDefault(piece => GetMovablePoints(piece).Count > 0);
         }
 
@@ -68,7 +68,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// </summary>
         /// <param name="piece"></param>
         /// <returns></returns>
-        public List<Point> GetMovablePoints(PieceBase piece) => piece switch
+        public List<Point> GetMovablePoints(Piece piece) => piece switch
         {
             { } tp and ITeleportable => GetMovablePointsTeleportable(tp),
             { } ghost and IGhost => ghost.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
@@ -80,7 +80,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// </summary>
         /// <param name="piece"></param>
         /// <returns></returns>
-        private List<Point> GetMovablePointsTeleportable(PieceBase piece)
+        private List<Point> GetMovablePointsTeleportable(Piece piece)
         {
             // ITeleportableは盤面の端を超えると逆の端に移動出来る
             var points = piece.MoveablePoints.Select(p =>
@@ -99,16 +99,16 @@ namespace NoMoney.Assets.Scripts.Board
         /// <returns></returns>
         public GameStatus JudgeGameState()
         {
-            var pieces = Objects.Where(o => o is PieceBase).Cast<PieceBase>().ToList();
+            var pieces = Objects.Where(o => o is Piece).Cast<Piece>().ToList();
 
             // プレイヤーの駒が上端に到達すれば勝利
-            bool isWin(List<PieceBase> pieces) => pieces.Any(piece => piece.Side == PieceSide.Player && piece.Position.Y == 0);
+            bool isWin(List<Piece> pieces) => pieces.Any(piece => piece.Side == PieceSide.Player && piece.Position.Y == 0);
 
             // 敵の駒が下端に到達すれば敗北
-            bool isLose(List<PieceBase> pieces) => pieces.Any(piece => piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1);
+            bool isLose(List<Piece> pieces) => pieces.Any(piece => piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1);
 
             // 駒が全て消えれば引き分け
-            bool isDraw(List<PieceBase> pieces) => pieces.Count == 0;
+            bool isDraw(List<Piece> pieces) => pieces.Count == 0;
 
             return pieces switch
             {
@@ -125,7 +125,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// <param name="piece"></param>
         /// <param name="point"></param>
         /// <exception cref="ArgumentException"></exception>
-        public void MovePiece(PieceBase piece, Point point)
+        public void MovePiece(Piece piece, Point point)
         {
             if (!GetMovablePoints(piece).Contains(point))
             {

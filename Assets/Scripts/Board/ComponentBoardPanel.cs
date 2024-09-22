@@ -49,7 +49,7 @@ namespace NoMoney.Assets.Scripts.Board
             CreateBoardSquares(board, squareWidth, squareHeight);
             CreateBoardObjects(board, squareWidth, squareHeight);
         }
-        
+
         /// <summary>
         /// リスナーを追加する
         /// </summary>
@@ -71,7 +71,7 @@ namespace NoMoney.Assets.Scripts.Board
             {
                 switch (obj)
                 {
-                    case PieceBase piece:
+                    case Piece piece:
                         CreatePieceObject(piece, squareWidth, squareHeight);
                         break;
                     default:
@@ -86,7 +86,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// <param name="piece"></param>
         /// <param name="squareWidth"></param>
         /// <param name="squareHeight"></param>
-        private void CreatePieceObject(PieceBase piece, float squareWidth, float squareHeight)
+        private void CreatePieceObject(Piece piece, float squareWidth, float squareHeight)
         {
             var pieceObject = Instantiate(_PiecePrefab, transform, false);
             var component = pieceObject.GetComponent<ComponentPiece>();
