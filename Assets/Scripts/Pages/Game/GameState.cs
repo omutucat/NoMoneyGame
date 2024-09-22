@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NoMoney.Assets.Scripts.Board;
 using NoMoney.Assets.Scripts.Pieces;
 using UnityEngine;
@@ -87,6 +88,26 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             public IGameState OnClick(Point point)
             {
                 Debug.Log("MoveState OnClick triggered at " + point.ToDebugString());
+                //別の味方駒をクリックした時なら、Movableを出し直してMoveに戻る
+                var obj = _Manager.Board.GetMovablePiecesAt(point);
+                if (obj != null && obj != _Manager._SelectedPiece)
+                {
+                    _Manager._SelectedPiece = obj;
+                    foreach (var movablePoint in _Manager._MovablePoints)
+                    {
+                        //脱色
+                        _Manager._BoardPanel.RemoveSquareTexture(movablePoint);
+                    }
+                    //移動リストを消す
+                    _Manager._MovablePoints = new List<Point>();
+                    foreach (var movablePoint in _Manager.Board.GetMovablePoints(obj))
+                    {
+                        _Manager._MovablePoints.Add(movablePoint);
+                        //着色
+                        _Manager._BoardPanel.ChangeSquareTextureMovable(movablePoint);
+                    }
+                    return new MoveState(_Manager);
+                }
                 //移動可能なマスでなければ何もしない
                 if (!_Manager._MovablePoints.Contains(point))
                 {
@@ -94,6 +115,12 @@ namespace NoMoney.Assets.Scripts.Pages.Game
                     return this;
                 }
                 _Manager.Board.MovePiece(_Manager._SelectedPiece, point);
+                foreach (var movablePoint in _Manager._MovablePoints)
+                {
+                    //脱色
+                    _Manager._BoardPanel.RemoveSquareTexture(movablePoint);
+                }
+                _Manager._MovablePoints = new List<Point>();
                 Debug.Log("Valid move to " + point);
 
 
