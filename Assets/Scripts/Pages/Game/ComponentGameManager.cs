@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NoMoney.Assets.Scripts.Board;
 using NoMoney.Assets.Scripts.Pieces;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Point = NoMoney.Assets.Scripts.Pieces.Point;
 
 namespace NoMoney.Assets.Pages.Game
@@ -13,6 +14,7 @@ namespace NoMoney.Assets.Pages.Game
         public BoardModel Board { get; private set; }
         private List<Point> MovablePoints = new List<Point>();
         private PieceBase _SelectedPiece = null;
+        public void MoveScene() => SceneManager.LoadScene("Result");
 
         [SerializeField] private ComponentBoardPanel _BoardPanel;
         [SerializeField] private int _BoardWidth = 8;
@@ -165,6 +167,7 @@ namespace NoMoney.Assets.Pages.Game
 
             public IState Update()
             {
+                _manager.MoveScene();
                 return this;
             }
 

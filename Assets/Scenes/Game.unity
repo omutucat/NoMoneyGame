@@ -548,9 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2a2d9dcb5905a4e89c0c785f62e9b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _BoardSquarePrefab: {fileID: 4404042596884565883, guid: b31d7fa2ec8184b4ba2e711f243e9b68, type: 3}
   MovabletTexture2D: {fileID: 2800000, guid: c72c10edb9fda74489525b9df2d22cf0, type: 3}
-  _PiecePrefab: {fileID: 5223467144226757372, guid: ab2a0508ceb7b7d4c8a8a74e207eb18f, type: 3}
   _BoardWidth: 8
   _BoardHeight: 8
 --- !u!1 &1515035850
