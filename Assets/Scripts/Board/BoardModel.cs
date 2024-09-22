@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using NoMoney.Assets.Scripts.Pieces;
 
 namespace NoMoney.Assets.Scripts.Board
@@ -32,7 +31,7 @@ namespace NoMoney.Assets.Scripts.Board
             // 重なっているオブジェクトがあるか
             // NOTE: Pointは構造体なので同値性比較ができる
             // NOTE: IGhostは重なっても問題ないので除外する
-            var isExistOverlapping = Objects.GroupBy(o => o.Position).Any(g => g.Where(o => o is not IGhost).Count() > 1);
+            var isExistOverlapping = Objects.GroupBy(o => o.Position).Any(g => g.Count(o => o is not IGhost) > 1);
 
             return !isExistIllegalPosition && !isExistOverlapping;
         }
@@ -63,9 +62,9 @@ namespace NoMoney.Assets.Scripts.Board
         /// <returns></returns>
         public List<Point> GetMovablePoints(PieceBase piece) => piece switch
         {
-            PieceBase tp when tp is ITeleportable => GetMovablePointsTeleportable(tp),
-            PieceBase ghost when ghost is IGhost => ghost.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
-            PieceBase pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p) && GetObjectsAt(p).Count == 0).ToList()
+            { } tp and ITeleportable => GetMovablePointsTeleportable(tp),
+            { } ghost and IGhost => ghost.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
+            { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p) && GetObjectsAt(p).Count == 0).ToList()
         };
 
         /// <summary>
@@ -129,7 +128,7 @@ namespace NoMoney.Assets.Scripts.Board
         public int Width
         {
             get => _Width;
-            set
+            private set
             {
                 if (value < 1)
                 {
@@ -141,7 +140,7 @@ namespace NoMoney.Assets.Scripts.Board
         public int Height
         {
             get => _Height;
-            set
+            private set
             {
                 if (value < 1)
                 {
