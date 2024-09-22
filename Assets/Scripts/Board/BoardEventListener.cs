@@ -2,7 +2,7 @@
 
 namespace NoMoney.Assets.Scripts.Board
 {
-    public interface BoardEventListener
+    public interface IBoardEventListener
     {
         void OnSquareClick(Point point);
     }

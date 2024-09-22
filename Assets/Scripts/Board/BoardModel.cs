@@ -48,16 +48,6 @@ namespace NoMoney.Assets.Scripts.Board
             // Immobilizedな駒は除外する
             return Objects.FirstOrDefault(o => o.Position.Equals(point) && !o.isContainStatus(PieceStatus.Immobilized));
         }
-        
-        /// <summary>
-        /// TODO シャンクス
-        /// 指定した座標のボタンを移動可能な色にする
-        /// </summary>
-        /// <param name="point"></param>
-        public void ColorPiecesMovable(List<Point> points)
-        {
-            
-        }
 
         /// <summary>
         /// 指定した座標に存在するオブジェクトを全て返す
