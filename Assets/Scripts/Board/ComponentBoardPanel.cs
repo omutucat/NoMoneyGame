@@ -45,6 +45,7 @@ namespace NoMoney.Assets.Scripts.Board
 
         public void Initialize(BoardModel board)
         {
+            _BoardEventListeners = new List<IBoardEventListener>();
             // 盤面の初期化処理
             // 自身のWidthとHeightを取得
             var myRectTransform = GetComponent<RectTransform>();
@@ -55,6 +56,15 @@ namespace NoMoney.Assets.Scripts.Board
 
             CreateBoardSquares(board, squareWidth, squareHeight);
             CreateBoardObjects(board, squareWidth, squareHeight);
+        }
+        
+        /// <summary>
+        /// リスナーを追加する
+        /// </summary>
+        /// <param name="listener"></param>
+        public void AddListener(IBoardEventListener listener)
+        {
+            _BoardEventListeners.Add(listener);
         }
 
         /// <summary>

@@ -12,13 +12,14 @@ namespace NoMoney.Assets.Scripts.Board
         private PieceBase _Piece;
         private float _SquareWidth;
         private float _SquareHeight;
+        private RectTransform _MyTransform;
         private bool _IsInitialized;
 
         private void Start()
         {
             // ピースのサイズを設定
-            var rectTransform = GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(_SquareWidth, _SquareHeight);
+            _MyTransform = GetComponent<RectTransform>();
+            _MyTransform.sizeDelta = new Vector2(_SquareWidth, _SquareHeight);
 
             // テクスチャの設定
             var texture = PieceTextures.PieceTexture(_Piece);
@@ -26,6 +27,11 @@ namespace NoMoney.Assets.Scripts.Board
             image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
             // 位置の更新
+            PositionUpdate();
+        }
+
+        private void Update()
+        {
             PositionUpdate();
         }
 
@@ -38,7 +44,7 @@ namespace NoMoney.Assets.Scripts.Board
             var positionX = (position.X * _SquareWidth) + _SquareWidth / 2;
             var positionY = (position.Y * -_SquareHeight) - _SquareHeight / 2;
             var positionVector = new Vector3(positionX, positionY, 0);
-            GetComponent<RectTransform>().anchoredPosition = positionVector;
+            _MyTransform.anchoredPosition = positionVector;
         }
 
         public void Initialize(PieceBase piece, float squareWidth, float squareHeight)

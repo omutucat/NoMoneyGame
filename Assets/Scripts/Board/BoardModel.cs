@@ -86,6 +86,32 @@ namespace NoMoney.Assets.Scripts.Board
             return points;
         }
 
+        
+        /// <summary>
+        /// 勝利状態になっているかを返す
+        /// </summary>
+        /// <returns></returns>
+        public bool IsGameEnd()
+        {
+            if(Objects)
+        }
+        
+        /// <summary>
+        /// 駒を動かす
+        /// </summary>
+        /// <param name="piece"></param>
+        /// <param name="point"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public void MovePiece(PieceBase piece, Point point)
+        {
+            if (!GetMovablePoints(piece).Contains(point))
+            {
+                throw new System.ArgumentException("Invalid move");
+            }
+
+            piece.SetPosition(point);
+        }
+
         /// <summary>
         /// 指定した座標が盤面の範囲外かを返す
         /// </summary>
