@@ -130,13 +130,19 @@ namespace NoMoney.Assets.Pages.Game
 
             public IState Update()
             {
-                if (_manager.Board.IsGameEnd())
+                switch (_manager.Board.IsGameEnd())
                 {
-                    Debug.Log("Game end");
-                    return new EndState(_manager);
+                    case GameStatus.Draw:
+                        return new EndState(_manager);
+                    case GameStatus.Win:
+                        return new EndState(_manager);
+                    case GameStatus.Lose:
+                        return new EndState(_manager);
+                    case GameStatus.Playing:
+                        return new SelectState(_manager);
+                    default:
+                        return new SelectState(_manager);
                 }
-                // 計算処理、勝敗判定、ターン切り替え
-                return new SelectState(_manager);
             }
 
             public IState OnClick(Point point)

@@ -4,6 +4,14 @@ using NoMoney.Assets.Scripts.Pieces;
 
 namespace NoMoney.Assets.Scripts.Board
 {
+    public enum GameStatus
+    {
+        Playing,
+        Win,
+        Lose,
+        Draw
+    }
+    
     /// <summary>
     /// 盤面を表すクラス
     /// </summary>
@@ -90,9 +98,18 @@ namespace NoMoney.Assets.Scripts.Board
         /// 勝利状態になっているかを返す
         /// </summary>
         /// <returns></returns>
-        public bool IsGameEnd()
+        public GameStatus IsGameEnd()
         {
-            if(Objects)
+            //オブジェクトが一個も無ければゲーム終了
+            if(Objects.Count == 0)
+            {
+                return GameStatus.Draw;
+            }
+            //勝利条件を満たしているか
+            if (true)
+            {
+                return GameStatus.Win;
+            }
         }
         
         /// <summary>
