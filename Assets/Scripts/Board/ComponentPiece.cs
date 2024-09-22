@@ -12,6 +12,7 @@ namespace NoMoney.Assets.Scripts.Board
         private PieceBase _Piece;
         private float _SquareWidth;
         private float _SquareHeight;
+        private bool _IsInitialized;
 
         private void Start()
         {
@@ -40,23 +41,17 @@ namespace NoMoney.Assets.Scripts.Board
             GetComponent<RectTransform>().anchoredPosition = positionVector;
         }
 
-        /// <summary>
-        /// 駒を生成する
-        /// </summary>
-        /// <param name="piece">駒インスタンス</param>
-        /// <param name="parent">親オブジェクトのtransform</param>
-        /// <param name="squareWidth">一マスの幅</param>
-        /// <param name="squareHeight">一マスの高さ</param>
-        /// <returns></returns>
-        public static ComponentPiece Create(PieceBase piece, Transform parent, float squareWidth, float squareHeight)
+        public void Initialize(PieceBase piece, float squareWidth, float squareHeight)
         {
-            var prefab = Resources.Load<GameObject>("Prefabs/Piece");
-            var pieceObject = Instantiate(prefab, parent, false);
-            var component = pieceObject.AddComponent<ComponentPiece>();
-            component._Piece = piece;
-            component._SquareWidth = squareWidth;
-            component._SquareHeight = squareHeight;
-            return component;
+            if (_IsInitialized)
+            {
+                return;
+            }
+
+            _Piece = piece;
+            _SquareWidth = squareWidth;
+            _SquareHeight = squareHeight;
+            _IsInitialized = true;
         }
     }
 }

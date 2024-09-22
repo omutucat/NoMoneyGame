@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using NoMoney.Assets.Scripts.Board;
 using NoMoney.Assets.Scripts.Pieces;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using static System.Linq.Enumerable;
 
 namespace NoMoney.Assets.Scripts.Board
 {
@@ -13,6 +12,7 @@ namespace NoMoney.Assets.Scripts.Board
     public class ComponentBoardPanel : MonoBehaviour
     {
         [SerializeField] private GameObject _BoardSquarePrefab;
+        [SerializeField] private GameObject _PiecePrefab;
 
         // テスト用に外からサイズを指定できるように
         [SerializeField] private int _BoardWidth;
@@ -20,11 +20,13 @@ namespace NoMoney.Assets.Scripts.Board
 
         private void Awake()
         {
+            // SerializeFieldで正しくオブジェクトが設定されていることの確認
+            Debug.Assert(_BoardSquarePrefab != null, "BoardSquarePrefab is not set.");
+            Debug.Assert(_PiecePrefab != null, "PiecePrefab is not set.");
 
-        }
-
-        private void Start()
-        {
+#pragma warning disable CS8602 // null 参照の可能性があるものの逆参照です。
+            Debug.Assert(_PiecePrefab.GetComponent<ComponentPiece>() != null, "PiecePrefab does not have ComponentPiece.");
+#pragma warning restore CS8602 // null 参照の可能性があるものの逆参照です。
         }
 
         public void Initialize(BoardModel board)
@@ -50,7 +52,9 @@ namespace NoMoney.Assets.Scripts.Board
         {
             foreach (var piece in board.Objects.Where(piece => piece is PieceBase))
             {
-                ComponentPiece.Create(piece, this.transform, squareWidth, squareHeight);
+                var pieceObject = Instantiate(_PiecePrefab, this.transform, false);
+                var component = pieceObject.GetComponent<ComponentPiece>();
+                component.Initialize(piece, squareWidth, squareHeight);
             }
         }
 
@@ -61,24 +65,29 @@ namespace NoMoney.Assets.Scripts.Board
         /// <param name="squareHeight"></param>
         private void CreateBoardSquares(BoardModel board, float squareWidth, float squareHeight)
         {
-            for (var x = 0; x < board.Size.Width; x++)
+            var points = Enumerable.Range(0, board.Size.Width)
+                .SelectMany(x => Enumerable.Range(0, board.Size.Height).Select(y => new Point(x, y)));
+
+            foreach (var point in points)
             {
-                for (var y = 0; y < board.Size.Height; y++)
-                {
-                    var positionX = (x * squareWidth) + squareWidth / 2;
-                    var positionY = (y * -squareHeight) - squareHeight / 2;
-                    var position = new Vector3(positionX, positionY, 0);
-                    var square = Instantiate(_BoardSquarePrefab, this.transform, false);
-
-                    var squareRectTransform = square.GetComponent<RectTransform>();
-                    squareRectTransform.anchoredPosition = position;
-                    squareRectTransform.sizeDelta = new Vector2(squareWidth, squareHeight);
-
-                    var button = square.GetComponentInChildren<Button>();
-                    var point = new Point(x, y);
-                    button.onClick.AddListener(() => OnSquareClicked(point));
-                }
+                CreateBoardSquare(point, squareWidth, squareHeight);
             }
+        }
+
+        private void CreateBoardSquare(Point point, float squareWidth, float squareHeight)
+        {
+            // 座標を計算してオブジェクトを生成
+            var positionX = (point.X * squareWidth) + squareWidth / 2;
+            var positionY = (point.Y * -squareHeight) - squareHeight / 2;
+            var positionObj = new Vector3(positionX, positionY, 0);
+            var squareObj = Instantiate(_BoardSquarePrefab, this.transform, false);
+
+            var squareRectTransform = squareObj.GetComponent<RectTransform>();
+            squareRectTransform.anchoredPosition = positionObj;
+            squareRectTransform.sizeDelta = new Vector2(squareWidth, squareHeight);
+
+            var button = squareObj.GetComponentInChildren<Button>();
+            button.onClick.AddListener(() => OnSquareClicked(point));
         }
 
         private void OnSquareClicked(Point point)
