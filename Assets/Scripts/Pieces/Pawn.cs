@@ -7,7 +7,7 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// </summary>
     public class Pawn : Piece
     {
-        public Pawn(Point position) : base(position)
+        public Pawn(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
         }
 

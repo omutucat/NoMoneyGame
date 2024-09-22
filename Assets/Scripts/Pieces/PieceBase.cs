@@ -33,11 +33,16 @@ namespace NoMoney.Assets.Scripts.Pieces
             _ => CalculateMoveablePoints(Position, SpecificMovablePoints, Direction)
         };
 
-        protected Piece(Point position, IEnumerable<PieceStatus>? statusList = null, PieceDirection direction = PieceDirection.Up, PieceSide side = PieceSide.Player) : base(position)
+        protected Piece(Point position, PieceSide side, IEnumerable<PieceStatus>? statusList = null) : base(position)
         {
-            Direction = direction;
             Side = side;
             StatusList = statusList?.ToList() ?? new List<PieceStatus>();
+            Direction = side switch
+            {
+                PieceSide.Player => PieceDirection.Up,
+                PieceSide.Enemy => PieceDirection.Down,
+                _ => throw new System.NotImplementedException()
+            };
         }
 
         public void SetPosition(Point position) => Position = position;

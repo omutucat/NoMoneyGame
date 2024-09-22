@@ -8,7 +8,7 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// </summary>
     public class Ghost : Piece, IGhost
     {
-        public Ghost(Point position) : base(position)
+        public Ghost(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
         }
 

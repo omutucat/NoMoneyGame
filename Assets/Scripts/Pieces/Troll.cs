@@ -17,7 +17,7 @@ namespace NoMoney.Assets.Scripts.Pieces
             new(0, 1)
         };
 
-        public Troll(Point position) : base(position)
+        public Troll(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
         }
 
