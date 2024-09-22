@@ -11,10 +11,10 @@ namespace NoMoney.Assets.Scripts.Board
     public class BoardModel
     {
         // TODO: Pieceではなく盤面に存在するあらゆるオブジェクトを持てるようにする
-        public List<PieceBase> Objects { get; }
+        public List<BoardObject> Objects { get; }
         public BoardSize Size { get; }
 
-        public BoardModel(BoardSize size, List<PieceBase> objects)
+        public BoardModel(BoardSize size, List<BoardObject> objects)
         {
             Size = size;
             Objects = objects;
@@ -24,7 +24,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// ボードが正当かチェックする。オブジェクトが重なっていないか、座標が範囲内かを確認する
         /// </summary>
         /// <returns></returns>
-        public bool IsvalidBoard()
+        public bool IsValidBoard()
         {
             // 不正な座標に存在するオブジェクトがあるか
             var isExistIllegalPosition = Objects.Any(o => IsPositionOutsideBounds(o.Position));
@@ -36,19 +36,18 @@ namespace NoMoney.Assets.Scripts.Board
 
             return !isExistIllegalPosition && !isExistOverlapping;
         }
-        
+
         /// <summary>
-        /// 指定した場所に存在する移動可能な駒を返す　
+        /// 指定した場所に存在する移動可能な駒を返す
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        
         public PieceBase GetMovablePiecesAt(Point point)
         {
-            // Immobilizedな駒は除外する
-            return Objects.FirstOrDefault(o => o.Position.Equals(point) && !o.isContainStatus(PieceStatus.Immobilized));
+            var pieces = Objects.Where(o => o.Position.Equals(point) && o is PieceBase).Cast<PieceBase>().ToList();
+            return pieces.FirstOrDefault(piece => GetMovablePoints(piece).Count > 0);
         }
-        
+
         /// <summary>
         /// TODO シャンクス
         /// 指定した座標のボタンを移動可能な色にする
@@ -56,7 +55,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// <param name="point"></param>
         public void ColorPiecesMovable(List<Point> points)
         {
-            
+
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private List<PieceBase> GetObjectsAt(Point point) =>
+        private List<BoardObject> GetObjectsAt(Point point) =>
             Objects.Where(o => o.Position.X == point.X && o.Position.Y == point.Y).ToList();
 
         /// <summary>

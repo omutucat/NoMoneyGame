@@ -53,7 +53,8 @@ namespace NoMoney.Assets.Scripts.Board
         /// <param name="squareHeight"></param>
         private void CreateBoardObjects(BoardModel board, float squareWidth, float squareHeight)
         {
-            foreach (var piece in board.Objects.Where(piece => piece is PieceBase))
+            var pieces = board.Objects.Where(piece => piece is PieceBase).Cast<PieceBase>().ToList();
+            foreach (var piece in pieces)
             {
                 var pieceObject = Instantiate(_PiecePrefab, this.transform, false);
                 var component = pieceObject.GetComponent<ComponentPiece>();
@@ -68,8 +69,8 @@ namespace NoMoney.Assets.Scripts.Board
         /// <param name="squareHeight"></param>
         private void CreateBoardSquares(BoardModel board, float squareWidth, float squareHeight)
         {
-            var points = Enumerable.Range(0, board.Size.Width)
-                .SelectMany(x => Enumerable.Range(0, board.Size.Height).Select(y => new Point(x, y)));
+            var points = Range(0, board.Size.Width)
+                .SelectMany(x => Range(0, board.Size.Height).Select(y => new Point(x, y)));
 
             foreach (var point in points)
             {
@@ -96,7 +97,7 @@ namespace NoMoney.Assets.Scripts.Board
         private void OnSquareClicked(Point point)
         {
             Debug.Log($"Square Clicked: {point.ToDebugString()}");
-            _BoardEventListeners.ForEach(listener => listener.OnSquareClick(point));
+            _BoardEventListeners?.ForEach(listener => listener.OnSquareClick(point));
         }
     }
 }

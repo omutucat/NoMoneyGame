@@ -56,10 +56,11 @@ namespace NoMoney.Assets.Pages.Game
 
             public IState OnClick(Point point)
             {
-                //　クリックされた座標の駒を取得
+                // クリックされた座標の駒を取得
                 var obj = _manager.Board.GetMovablePiecesAt(point);
                 // 駒が無ければ何もしない
-                if(obj == null) return this;
+                if (obj == null)
+                    return this;
                 // 駒があれば移動可能なマスを着色
                 _manager.Board.ColorPiecesMovable(_manager.Board.GetMovablePoints(obj));
                 return new MoveState(_manager);
@@ -111,7 +112,7 @@ namespace NoMoney.Assets.Pages.Game
         {
             // TODO: 本来は外部から受け取る
             var size = new BoardSize(_BoardWidth, _BoardHeight);
-            var pieces = new List<PieceBase>
+            var pieces = new List<BoardObject>
             {
                 new Pawn(new Point(0, 0)),
                 new Pawn(new Point(1, 0)),
@@ -127,7 +128,7 @@ namespace NoMoney.Assets.Pages.Game
         {
             _CurrentState = _CurrentState.Update();
         }
-        
+
         public bool CanAcceptClicks => _CurrentState.IsAcceptClick;
         public void OnSquareClick(Point point)
         {

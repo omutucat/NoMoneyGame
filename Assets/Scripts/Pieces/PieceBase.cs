@@ -4,55 +4,44 @@ using System.Linq;
 namespace NoMoney.Assets.Scripts.Pieces
 {
     /// <summary>
-    /// 座標
-    /// </summary>
-    public struct Point
-    {
-        public int X;
-        public int Y;
-
-        public Point(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public string ToDebugString() => $"({X}, {Y})";
-    }
-
-    /// <summary>
     /// 駒の基底クラス
     /// </summary>
-    public abstract class PieceBase
+    public abstract class PieceBase : BoardObject
     {
-        /// <summary>
-        /// 駒の位置
-        /// </summary>
-        public Point Position { get; private set; }
-
-        /// <summary>
-        /// 移動可能な座標
-        /// </summary>
-        public abstract List<Point> MoveablePoints { get; }
-
         /// <summary>
         /// 駒の属性
         /// </summary>
         protected List<PieceStatus> StatusList { get; }
 
-        protected PieceBase(Point position, IEnumerable<PieceStatus> statusList = null)
+        /// <summary>
+        /// 派生クラスで実装する移動可能な座標
+        /// </summary>
+        /// <returns></returns>
+        protected abstract List<Point> SpecificMovablePoints { get; }
+
+        /// <summary>
+        /// 移動可能な座標
+        /// </summary>
+        public List<Point> MoveablePoints => StatusList switch
+        {
+            // 駒がImmobilizedの場合は移動できない
+            { } when StatusList.Any(s => s == PieceStatus.Immobilized) => new List<Point>(),
+            _ => SpecificMovablePoints
+        };
+
+        protected PieceBase(Point position, IEnumerable<PieceStatus>? statusList = null)
         {
             Position = position;
             StatusList = statusList?.ToList() ?? new List<PieceStatus>();
         }
 
+        public void SetPosition(Point position) => Position = position;
+
+        public bool IsContainStatus(PieceStatus status) => StatusList.Contains(status);
+
         public virtual void OnTurnEnd()
         {
         }
-
-        public void SetPosition(Point position) => Position = position;
-        
-        public bool isContainStatus(PieceStatus status) => StatusList.Contains(status);
     }
 }
 

@@ -11,7 +11,7 @@ namespace NoMoney.Assets.Scripts.Pieces
         {
         }
 
-        public override List<Point> MoveablePoints
+        protected override List<Point> SpecificMovablePoints
         {
             get
             {
