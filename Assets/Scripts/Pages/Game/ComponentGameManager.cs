@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using NoMoney.Assets.Scripts;
 using NoMoney.Assets.Scripts.Board;
 using NoMoney.Assets.Scripts.Pieces;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Point = NoMoney.Assets.Scripts.Pieces.Point;
@@ -182,18 +184,10 @@ namespace NoMoney.Assets.Pages.Game
         private void Awake()
         {
             // TODO: 本来は外部から受け取る
-            var size = new BoardSize(_BoardWidth, _BoardHeight);
-            var pieces = new List<BoardObject>
-            {
-                new Pawn(new Point(0, 0)),
-                new Pawn(new Point(1, 0)),
-            };
-            Board = new BoardModel(size, pieces);
+            var currentStage = SystemManager.CurrentStage;
+            Board = StageList.GetStage(currentStage) ?? throw new Exception("Stage not found");
 
             _BoardPanel.Initialize(Board);
-
-
-
             _CurrentState = new StartState(this);
             Debug.Log("Game initialized with StartState");
         }
