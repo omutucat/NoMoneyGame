@@ -152,26 +152,20 @@ namespace NoMoney.Assets.Scripts.Board
         public int Width
         {
             get => _Width;
-            private set
+            private set => _Width = value switch
             {
-                if (value < 1)
-                {
-                    throw new System.ArgumentOutOfRangeException();
-                }
-                _Width = value;
-            }
+                < 1 => throw new System.ArgumentOutOfRangeException(),
+                _ => value
+            };
         }
         public int Height
         {
             get => _Height;
-            private set
+            private set => _Height = value switch
             {
-                if (value < 1)
-                {
-                    throw new System.ArgumentOutOfRangeException();
-                }
-                _Height = value;
-            }
+                < 1 => throw new System.ArgumentOutOfRangeException(),
+                _ => value
+            };
         }
 
         public BoardSize(int width, int height)
