@@ -10,12 +10,12 @@ namespace NoMoney.Assets.Scripts.Pieces
         private static Texture2D GHOST_IMAGE = Resources.Load<Texture2D>("Images/Pieces/Ghost");
         private static Texture2D TROLL_IMAGE = Resources.Load<Texture2D>("Images/Pieces/Troll");
 
-        public static Texture2D PieceTexture(PieceType type) => type switch
+        public static Texture2D PieceTexture(PieceBase piece) => piece switch
         {
-            PieceType.Porn => PAWN_IMAGE,
-            PieceType.Hero => HERO_IMAGE,
-            PieceType.Ghost => GHOST_IMAGE,
-            PieceType.Troll => TROLL_IMAGE,
+            Pawn => PAWN_IMAGE,
+            Hero => HERO_IMAGE,
+            Ghost => GHOST_IMAGE,
+            Troll => TROLL_IMAGE,
             _ => throw new ArgumentException("Invalid piece type")
         };
     }
