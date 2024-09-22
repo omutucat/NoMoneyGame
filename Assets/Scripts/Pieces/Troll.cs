@@ -28,8 +28,8 @@ namespace NoMoney.Assets.Scripts.Pieces
                 var points = new List<Point>
                 //前後左右に進める
                 {
-                    new(0, 1),
                     new(0, -1),
+                    new(0, 1),
                     new(-1, 0),
                     new(1, 0)
                 };

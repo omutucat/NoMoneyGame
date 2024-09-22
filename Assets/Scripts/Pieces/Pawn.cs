@@ -14,9 +14,9 @@ namespace NoMoney.Assets.Scripts.Pieces
         protected override List<Point> SpecificMovablePoints => new()
         //前三方向に進める
         {
-            new(0, 1),
-            new(-1, 1),
-            new(1, 1)
+            new(0, -1),
+            new(-1, -1),
+            new(1, -1)
         };
     }
 }

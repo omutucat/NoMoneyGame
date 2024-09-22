@@ -12,7 +12,7 @@ namespace NoMoney.Assets.Scripts.Pieces
         private int _TurnCount = 0;
         private const int IMMOBILE_TURNS = 5;
 
-        public Hero(Point position) : base(position, new List<PieceStatus> { PieceStatus.Immobilized })
+        public Hero(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
         }
 

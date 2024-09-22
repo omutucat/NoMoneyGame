@@ -22,10 +22,10 @@ namespace NoMoney.Assets.Scripts.Pieces
         // m: 駒の位置
         new()
         {
-            new(0, 1),
-            new(-1, 1),
-            new(1, 1),
-            new(0, 2)
+            new(0, -1),
+            new(-1, -1),
+            new(1, -1),
+            new(0, -2)
         };
     }
 }
