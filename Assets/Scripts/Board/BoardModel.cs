@@ -17,7 +17,6 @@ namespace NoMoney.Assets.Scripts.Board
     /// </summary>
     public class BoardModel
     {
-        // TODO: Pieceではなく盤面に存在するあらゆるオブジェクトを持てるようにする
         public List<BoardObject> Objects { get; }
         public BoardSize Size { get; }
 
