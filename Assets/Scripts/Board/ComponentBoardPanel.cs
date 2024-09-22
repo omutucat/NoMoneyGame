@@ -67,13 +67,30 @@ namespace NoMoney.Assets.Scripts.Board
         /// <param name="squareHeight"></param>
         private void CreateBoardObjects(BoardModel board, float squareWidth, float squareHeight)
         {
-            var pieces = board.Objects.Where(piece => piece is PieceBase).Cast<PieceBase>().ToList();
-            foreach (var piece in pieces)
+            foreach (var obj in board.Objects)
             {
-                var pieceObject = Instantiate(_PiecePrefab, this.transform, false);
-                var component = pieceObject.GetComponent<ComponentPiece>();
-                component.Initialize(piece, squareWidth, squareHeight);
+                switch (obj)
+                {
+                    case PieceBase piece:
+                        CreatePieceObject(piece, squareWidth, squareHeight);
+                        break;
+                    default:
+                        break;
+                }
             }
+        }
+
+        /// <summary>
+        /// 駒を生成する
+        /// </summary>
+        /// <param name="piece"></param>
+        /// <param name="squareWidth"></param>
+        /// <param name="squareHeight"></param>
+        private void CreatePieceObject(PieceBase piece, float squareWidth, float squareHeight)
+        {
+            var pieceObject = Instantiate(_PiecePrefab, transform, false);
+            var component = pieceObject.GetComponent<ComponentPiece>();
+            component.Initialize(piece, squareWidth, squareHeight);
         }
 
         /// <summary>
