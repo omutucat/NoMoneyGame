@@ -14,6 +14,7 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public Hero(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
+            StatusList.Add(PieceStatus.Immobilized);
         }
 
         protected override List<Point> SpecificMovablePoints =>
@@ -35,6 +36,10 @@ namespace NoMoney.Assets.Scripts.Pieces
             if (_TurnCount < IMMOBILE_TURNS)
             {
                 _TurnCount++;
+                
+            }
+            else if (_TurnCount == IMMOBILE_TURNS)
+            {
                 StatusList.Remove(PieceStatus.Immobilized);
             }
         }

@@ -15,7 +15,7 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// <summary>
         /// 駒の属性
         /// </summary>
-        protected List<PieceStatus> StatusList { get; }
+        public List<PieceStatus> StatusList { get; }
 
         /// <summary>
         /// 派生クラスで実装する移動可能な座標

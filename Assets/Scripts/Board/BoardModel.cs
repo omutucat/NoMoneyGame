@@ -89,11 +89,27 @@ namespace NoMoney.Assets.Scripts.Board
         /// <returns></returns>
         public List<Point> GetMovablePoints(Piece piece) => piece switch
         {
+            Piece p when p.StatusList.Any(s => s == PieceStatus.Immobilized) => new List<Point>(),
             { } tp and ITeleportable => GetMovablePointsTeleportable(tp),
             { } ghost and IGhost => ghost.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
             { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p) && GetObjectsAt(p).Count == 0).ToList(),
             _ => new List<Point>()
         };
+
+        
+        /// <summary>
+        /// 各こまのターンエンド処理をする
+        /// </summary>
+        public void OnTurnEnd()
+        {
+            foreach (var boardObject in Objects)
+            {
+                if (boardObject is Piece piece)
+                {
+                    piece.OnTurnEnd();
+                }
+            }
+        }
 
         /// <summary>
         /// テレポート可能な駒の移動可能な座標を返す

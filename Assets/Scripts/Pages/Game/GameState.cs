@@ -133,6 +133,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             public IGameState Update()
             {
                 _Manager.turn.OnTurnEnd();
+                _Manager.Board.OnTurnEnd();
                 return _Manager.Board.JudgeGameState() switch
                 {
                     GameStatus.Win or GameStatus.Lose or GameStatus.Draw => new EndState(_Manager),
