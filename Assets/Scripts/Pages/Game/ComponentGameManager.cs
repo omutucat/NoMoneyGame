@@ -25,17 +25,14 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             {
                 // 駒が選択された時に移動可能なマスを更新
                 _SelectedPiece = value;
-                MovablePoints = value is null ? new List<Point>() : Board.GetMovablePoints(value);
+                MovablePoints = value is null ? new List<Point>() : value.GetMovablePoints(Board);
             }
         }
 
         private List<Point> MovablePoints
         {
-            set
-            {
-                // 移動可能マスが更新されたらパネルに反映
-                _BoardPanel.SetMovableSquares(value);
-            }
+            // 移動可能マスが更新されたらパネルに反映
+            set => _BoardPanel.SetMovableSquares(value);
         }
 
         public void MoveScene() => SceneManager.LoadScene("Result");

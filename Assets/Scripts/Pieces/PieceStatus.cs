@@ -13,7 +13,7 @@
     {
     }
 
-    public class InSleep : PieceStatus, ITurnEndListener
+    public class InSleep : PieceStatus, ITurnChangeListener
     {
         public int TurnCount { get; private set; }
 
@@ -31,7 +31,7 @@
         public void OnTurnEnd() => DecreaseTurnCount();
     }
 
-    public interface ITurnEndListener
+    public interface ITurnChangeListener
     {
         void OnTurnEnd();
     }

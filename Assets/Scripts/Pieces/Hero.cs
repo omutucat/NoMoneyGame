@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using NoMoney.Assets.Scripts.Board;
 using Unity.VisualScripting;
 
 namespace NoMoney.Assets.Scripts.Pieces
@@ -6,7 +8,7 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// <summary>
     /// 勇者の駒
     /// 5ターン目まで動けない
-    /// 盤面の端に到達すると、反対側の端にワープする
+    /// 盤面の左右端に到達すると、反対側の端にワープする
     /// </summary>
     public class Hero : Piece, ITeleportable
     {
@@ -31,5 +33,14 @@ namespace NoMoney.Assets.Scripts.Pieces
                 new(-1, 1),
                 new(-1, -1),
             };
+
+        protected override List<Point> JudgeMovablePoints(List<Point> idealMovablePoints, BoardModel board) =>
+            idealMovablePoints.Select(p =>
+                {
+                    var x = (p.X + board.Size.Width) % board.Size.Width;
+                    var y = p.Y;
+                    return new Point(x, y);
+                }
+            ).ToList();
     }
 }

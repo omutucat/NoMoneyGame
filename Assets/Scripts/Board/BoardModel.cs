@@ -48,18 +48,6 @@ namespace NoMoney.Assets.Scripts.Board
 
             return !isExistIllegalPosition && !isExistOverlapping;
         }
-
-        /// <summary>
-        /// 指定した場所に存在する移動可能な駒を返す
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        public Piece GetMovablePiecesAt(Point point)
-        {
-            var pieces = Objects.Where(o => o.Position.Equals(point) && o is Piece).Cast<Piece>().ToList();
-            return pieces.FirstOrDefault(piece => GetMovablePoints(piece).Count > 0);
-        }
-
         public void OnDestroyPiece(BoardObject sender) => Objects.Remove(sender);
 
         /// <summary>
@@ -70,18 +58,6 @@ namespace NoMoney.Assets.Scripts.Board
         public List<BoardObject> GetObjectsAt(Point point) =>
             Objects.Where(o => o.Position.Equals(point)).ToList();
 
-        /// <summary>
-        /// 指定したピースが移動可能な座標を返す
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <returns></returns>
-        public List<Point> GetMovablePoints(Piece piece) => piece switch
-        {
-            Piece p when p.StatusList.Any(s => s is Immobilized or InSleep) => new List<Point>(),
-            { } tp and ITeleportable => GetMovablePointsTeleportable(tp),
-            { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
-            _ => new List<Point>()
-        };
 
         /// <summary>
         /// 各こまのターンエンド処理をする
@@ -89,7 +65,7 @@ namespace NoMoney.Assets.Scripts.Board
         public void OnTurnChanged(PieceSide side) =>
             // 指定したサイドの駒のターンエンド処理をする
             Objects.Where(o => o is Piece piece && piece.Side == side).Cast<Piece>().ToList()
-                .ForEach(p => p.OnTurnEnd());
+                .ForEach(p => p.OnTurnChanged());
 
         /// <summary>
         /// テレポート可能な駒の移動可能な座標を返す
@@ -99,7 +75,7 @@ namespace NoMoney.Assets.Scripts.Board
         private List<Point> GetMovablePointsTeleportable(Piece piece)
         {
             // ITeleportableは盤面の端を超えると逆の端に移動出来る
-            var points = piece.MoveablePoints.Select(p =>
+            var points = piece.GetMovablePoints(this).Select(p =>
             {
                 var x = (p.X + Size.Width) % Size.Width;
                 var y = (p.Y + Size.Height) % Size.Height;
@@ -142,7 +118,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private bool IsPositionOutsideBounds(Point point) =>
+        public bool IsPositionOutsideBounds(Point point) =>
             point.X < 0 || point.X >= Size.Width || point.Y < 0 || point.Y >= Size.Height;
 
     }

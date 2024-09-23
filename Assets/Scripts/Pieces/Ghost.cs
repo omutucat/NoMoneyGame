@@ -32,7 +32,7 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public override bool TryMove(Point point, BoardModel board)
         {
-            if (!board.GetMovablePoints(this).Contains(point))
+            if (!GetMovablePoints(board).Contains(point))
             {
                 return false;
             }

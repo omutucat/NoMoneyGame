@@ -34,6 +34,10 @@ namespace NoMoney.Assets.Scripts.Board
             _BoardSquarePrefab = Resources.Load<GameObject>("Prefabs/BoardSquare");
         }
 
+        /// <summary>
+        /// 盤面の初期化処理
+        /// </summary>
+        /// <param name="board"></param>
         public void Initialize(BoardModel board)
         {
             _BoardEventListeners = new List<IBoardEventListener>();
@@ -53,10 +57,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// リスナーを追加する
         /// </summary>
         /// <param name="listener"></param>
-        public void AddListener(IBoardEventListener listener)
-        {
-            _BoardEventListeners.Add(listener);
-        }
+        public void AddListener(IBoardEventListener listener) => _BoardEventListeners.Add(listener);
 
         /// <summary>
         /// 盤面に存在するオブジェクトを生成する
@@ -93,7 +94,7 @@ namespace NoMoney.Assets.Scripts.Board
         }
 
         /// <summary>
-        /// 盤面のマスを生成する
+        /// 全てのマス目を生成する
         /// </summary>
         /// <param name="board"></param>
         /// <param name="squareWidth"></param>
@@ -109,30 +110,12 @@ namespace NoMoney.Assets.Scripts.Board
             }
         }
 
-        public void SetMovableSquares(List<Point> points)
-        {
-            ResetSquareStates();
-
-            foreach (var point in points)
-            {
-                SetSquareState(point, SquareState.Movable);
-            }
-        }
-
-        public void ResetSquareStates()
-        {
-            foreach (var square in _SquareObjects)
-            {
-                SetSquareState(square.Point, SquareState.Normal);
-            }
-        }
-
-        public void SetSquareState(Point point, SquareState state)
-        {
-            var square = _SquareObjects.Find(s => s.Point.Equals(point));
-            square.Square.GetComponent<ComponentSquare>().SetFrameState(state);
-        }
-
+        /// <summary>
+        /// マス目を生成する
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="squareWidth"></param>
+        /// <param name="squareHeight"></param>
         private void CreateBoardSquare(Point point, float squareWidth, float squareHeight)
         {
             // 座標を計算してオブジェクトを生成
@@ -145,10 +128,55 @@ namespace NoMoney.Assets.Scripts.Board
             button.onClick.AddListener(() => OnSquareClicked(point));
         }
 
+        /// <summary>
+        /// マス目がクリックされた時の処理
+        /// </summary>
+        /// <param name="point"></param>
         private void OnSquareClicked(Point point)
         {
             Debug.Log($"Square Clicked: {point.ToDebugString()}");
             _BoardEventListeners?.ForEach(listener => listener.OnSquareClick(point));
+        }
+
+        /// <summary>
+        /// マス目を移動可能状態に設定する
+        /// </summary>
+        /// <param name="points"></param>
+        public void SetMovableSquares(List<Point> points)
+        {
+            ResetSquareStates();
+
+            foreach (var point in points)
+            {
+                SetSquareState(point, SquareState.Movable);
+            }
+        }
+
+        /// <summary>
+        /// マス目の状態をリセットする
+        /// </summary>
+        public void ResetSquareStates()
+        {
+            foreach (var square in _SquareObjects)
+            {
+                SetSquareState(square.Point, SquareState.Normal);
+            }
+        }
+
+        /// <summary>
+        /// マス目の状態を設定する
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="state"></param>
+        public void SetSquareState(Point point, SquareState state)
+        {
+            var square = _SquareObjects.FirstOrDefault(s => s.Point.Equals(point));
+            if (square.Square == null)
+            {
+                return;
+            }
+
+            square.Square.GetComponent<ComponentSquare>().SetFrameState(state);
         }
     }
 }
