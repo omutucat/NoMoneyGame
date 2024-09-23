@@ -12,6 +12,10 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public PieceSide Side { get; protected set; }
 
+        public delegate void DestroyEventHandler();
+
+        public event DestroyEventHandler OnDestroy;
+
         /// <summary>
         /// 駒の属性
         /// </summary>
@@ -23,14 +27,11 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// <returns></returns>
         protected abstract List<Point> SpecificMovablePoints { get; }
 
-
         /// <summary>
-        /// この駒を破壊する
+        /// 破壊される時に呼び出すメソッド
+        /// OnDestroyイベントを発火する
         /// </summary>
-        public void Destroy()
-        {
-            //ComponentPieceがこれを持っている
-        }
+        public void Destroy() => OnDestroy?.Invoke();
 
         /// <summary>
         /// 移動可能な座標
