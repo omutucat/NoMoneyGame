@@ -54,23 +54,19 @@ namespace NoMoney.Assets.Scripts.Board
             return pieces.FirstOrDefault(piece => GetMovablePoints(piece).Count > 0);
         }
 
-        public void DestroyPieceAt(Point point,PieceSide side)
+        public void DestroyPieceAt(Point point, PieceSide side)
         {
             var pieceAt = GetMovablePiecesAt(point);
-            if (pieceAt == null)
+            switch (pieceAt)
             {
-                return;
-            }
-            if (pieceAt.Side == side)
-            {
-                return;
-            }
-            else
-            {
-                //Objectsから除く
-                Objects.Remove(pieceAt);
-                //破壊
-                pieceAt.Destroy();
+                case null:
+                    return;
+                case Piece piece when piece.Side == side:
+                    return;
+                default:
+                    Objects.Remove(pieceAt);
+                    pieceAt.Destroy();
+                    break;
             }
         }
 
@@ -92,11 +88,10 @@ namespace NoMoney.Assets.Scripts.Board
             Piece p when p.StatusList.Any(s => s == PieceStatus.Immobilized) => new List<Point>(),
             { } tp and ITeleportable => GetMovablePointsTeleportable(tp),
             { } ghost and IGhost => ghost.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
-            { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p) && GetObjectsAt(p).Count == 0).ToList(),
+            { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
             _ => new List<Point>()
         };
 
-        
         /// <summary>
         /// 各こまのターンエンド処理をする
         /// </summary>
@@ -169,6 +164,29 @@ namespace NoMoney.Assets.Scripts.Board
             }
 
             piece.SetPosition(point);
+        }
+
+        public bool TryMovePiece(Piece piece, Point point)
+        {
+            if (!GetMovablePoints(piece).Contains(point))
+            {
+                return false;
+            }
+
+            var objInPoint = GetObjectsAt(point).FirstOrDefault();
+
+            switch (objInPoint)
+            {
+                case null:
+                    MovePiece(piece, point);
+                    return true;
+                case Piece pieceAt when pieceAt.Side != piece.Side:
+                    DestroyPieceAt(point, piece.Side);
+                    MovePiece(piece, point);
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>

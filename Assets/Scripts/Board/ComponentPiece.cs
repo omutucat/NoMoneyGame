@@ -64,6 +64,11 @@ namespace NoMoney.Assets.Scripts.Board
             _SquareWidth = squareWidth;
             _SquareHeight = squareHeight;
             _IsInitialized = true;
+
+            // 駒の破壊時イベントを登録
+            _Piece.OnDestroy += DestroyMyself;
         }
+
+        private void DestroyMyself() => Destroy(gameObject);
     }
 }

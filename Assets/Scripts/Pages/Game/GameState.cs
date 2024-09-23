@@ -79,45 +79,27 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             public MoveState(ComponentGameManager manager) => _Manager = manager;
 
             public IGameState Update() => this;
-            
+
             public IGameState OnClick(Point point)
             {
                 Debug.Log("MoveState OnClick triggered at " + point.ToDebugString());
 
-                // クリックされた座標の駒を取得
                 var clickedPiece = _Manager.Board.GetMovablePiecesAt(point);
 
-                if (clickedPiece == _Manager.SelectedPiece)
+                if (clickedPiece is not null && clickedPiece.Side == _Manager.turn.GameSide())
                 {
-                    // 選択中の駒と同じなら何もしない
-                    return this;
-                }
-
-                if (clickedPiece is not null)
-                {
-                    // 選択中の駒と違う駒がクリックされた場合
                     _Manager.SelectedPiece = clickedPiece;
-
-                    return new MoveState(_Manager);
-                }
-
-                //移動可能なマスでなければ何もしない
-                if (!_Manager.MovablePoints.Contains(point))
-                {
-                    Debug.Log("Invalid move: " + point.ToDebugString() + " is not in movable points");
                     return this;
                 }
 
-                //移動先に敵駒がいたら破壊する
-                _Manager.Board.DestroyPieceAt(point,_Manager.turn.GameSide());
-                
-                _Manager.Board.MovePiece(_Manager.SelectedPiece, point);
-                Debug.Log("Valid move to " + point);
-
-                _Manager.SelectedPiece = null;
-
-                // 移動が完了したら新しいStateを返す
-                return new CalcState(_Manager);
+                switch (_Manager.Board.TryMovePiece(_Manager.SelectedPiece, point))
+                {
+                    case true:
+                        _Manager.SelectedPiece = null;
+                        return new CalcState(_Manager);
+                    case false:
+                        return this;
+                }
             }
         }
 
