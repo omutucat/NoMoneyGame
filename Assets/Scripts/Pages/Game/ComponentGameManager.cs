@@ -30,7 +30,6 @@ namespace NoMoney.Assets.Scripts.Pages.Game
 
         private List<Point> MovablePoints
         {
-            get => _MovablePoints;
             set
             {
                 _MovablePoints = value;
@@ -39,9 +38,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
                 _BoardPanel.SetMovableSquares(value);
             }
         }
-        
-        
-        
+
         public void MoveScene() => SceneManager.LoadScene("Result");
 
         private void Start() => CurrentState = new StartState(this);

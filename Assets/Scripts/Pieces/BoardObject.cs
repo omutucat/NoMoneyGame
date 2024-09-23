@@ -1,4 +1,5 @@
 ﻿using System;
+using NoMoney.Assets.Scripts.Board;
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
@@ -18,30 +19,15 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public readonly string ToDebugString() => $"({X}, {Y})";
 
-        public bool Equals(Point other)
-        {
-            return X == other.X && Y == other.Y;
-        }
+        public bool Equals(Point other) => X == other.X && Y == other.Y;
 
-        public override bool Equals(object obj)
-        {
-            return obj is Point other && Equals(other);
-        }
+        public override bool Equals(object obj) => obj is Point other && Equals(other);
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(X, Y);
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y);
 
-        public static bool operator ==(Point left, Point right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(Point left, Point right) => left.Equals(right);
 
-        public static bool operator !=(Point left, Point right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(Point left, Point right) => !left.Equals(right);
     }
 
     public abstract class BoardObject
