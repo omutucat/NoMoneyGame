@@ -6,7 +6,7 @@ namespace NoMoney.Assets.Scripts.Pieces
     /// 幽霊駒
     /// 他の駒に重なることが出来、重なっている駒を行動不能にする
     /// </summary>
-    public class Ghost : Piece, IGhost
+    public class Ghost : Piece
     {
         public Ghost(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {

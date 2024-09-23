@@ -9,10 +9,6 @@ namespace NoMoney.Assets.Scripts.Pieces
         public List<Point> ExtraPositions { get; }
     }
 
-    public interface IGhost
-    {
-    }
-
     public interface ITeleportable
     {
     }

@@ -37,8 +37,7 @@ namespace NoMoney.Assets.Scripts.Board
 
             // 重なっているオブジェクトがあるか
             // NOTE: Pointは構造体なので同値性比較ができる
-            // NOTE: IGhostは重なっても問題ないので除外する
-            var isExistOverlapping = Objects.GroupBy(o => o.Position).Any(g => g.Count(o => o is not IGhost) > 1);
+            var isExistOverlapping = Objects.GroupBy(o => o.Position).Any(g => g.Count() > 1);
 
             return !isExistIllegalPosition && !isExistOverlapping;
         }
@@ -87,7 +86,6 @@ namespace NoMoney.Assets.Scripts.Board
         {
             Piece p when p.StatusList.Any(s => s == PieceStatus.Immobilized) => new List<Point>(),
             { } tp and ITeleportable => GetMovablePointsTeleportable(tp),
-            { } ghost and IGhost => ghost.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
             { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
             _ => new List<Point>()
         };
