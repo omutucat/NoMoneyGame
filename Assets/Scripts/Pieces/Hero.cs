@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
@@ -14,7 +15,7 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public Hero(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
-            StatusList.Add(PieceStatus.Immobilized);
+            AddStatus(new InSleep(IMMOBILE_TURNS));
         }
 
         protected override List<Point> SpecificMovablePoints =>
@@ -30,18 +31,5 @@ namespace NoMoney.Assets.Scripts.Pieces
                 new(-1, 1),
                 new(-1, -1),
             };
-
-        public override void OnTurnEnd()
-        {
-            if (_TurnCount < IMMOBILE_TURNS)
-            {
-                _TurnCount++;
-                
-            }
-            else if (_TurnCount == IMMOBILE_TURNS)
-            {
-                StatusList.Remove(PieceStatus.Immobilized);
-            }
-        }
     }
 }

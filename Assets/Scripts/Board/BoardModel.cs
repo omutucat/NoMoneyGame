@@ -77,7 +77,7 @@ namespace NoMoney.Assets.Scripts.Board
         /// <returns></returns>
         public List<Point> GetMovablePoints(Piece piece) => piece switch
         {
-            Piece p when p.StatusList.Any(s => s == PieceStatus.Immobilized) => new List<Point>(),
+            Piece p when p.StatusList.Any(s => s is Immobilized or InSleep) => new List<Point>(),
             { } tp and ITeleportable => GetMovablePointsTeleportable(tp),
             { } pc => pc.MoveablePoints.Where(p => !IsPositionOutsideBounds(p)).ToList(),
             _ => new List<Point>()
@@ -139,22 +139,6 @@ namespace NoMoney.Assets.Scripts.Board
                 { } when isDraw(pieces) => GameStatus.Draw,
                 _ => GameStatus.Playing
             };
-        }
-
-        /// <summary>
-        /// 駒を動かす
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <param name="point"></param>
-        /// <exception cref="ArgumentException"></exception>
-        public void MovePiece(Piece piece, Point point)
-        {
-            if (!GetMovablePoints(piece).Contains(point))
-            {
-                throw new System.ArgumentException("Invalid move");
-            }
-
-            piece.SetPosition(point);
         }
 
         public bool TryMovePiece(Piece piece, Point point) => piece.TryMove(point, this);

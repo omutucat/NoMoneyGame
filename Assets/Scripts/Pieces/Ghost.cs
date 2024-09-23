@@ -49,7 +49,7 @@ namespace NoMoney.Assets.Scripts.Pieces
                     {
                         if (o is Piece piece)
                         {
-                            piece.StatusList.Add(PieceStatus.Immobilized);
+                            piece.StatusList.Add(new Immobilized());
                         }
                     });
                     Destroy();

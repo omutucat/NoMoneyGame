@@ -16,7 +16,7 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// <summary>
         /// 駒の属性
         /// </summary>
-        public List<PieceStatus> StatusList { get; }
+        public List<PieceStatus> StatusList { get; private set; }
 
         /// <summary>
         /// 派生クラスで実装する移動可能な座標
@@ -29,8 +29,8 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// </summary>
         public List<Point> MoveablePoints => StatusList switch
         {
-            // 駒がImmobilizedの場合は移動できない
-            { } when StatusList.Any(s => s == PieceStatus.Immobilized) => new List<Point>(),
+            // 駒がInSleepかImmobilizedの時は移動できない
+            { } when StatusList.Any(s => s is InSleep or Immobilized) => new List<Point>(),
             _ => CalculateMoveablePoints(Position, SpecificMovablePoints, Direction)
         };
 
@@ -50,8 +50,15 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public bool IsContainStatus(PieceStatus status) => StatusList.Contains(status);
 
-        public virtual void OnTurnEnd()
+        public virtual void OnTurnEnd() => StatusList.Where(s => s is ITurnEndListener).Cast<ITurnEndListener>().ToList().ForEach(s => s.OnTurnEnd());
+
+        public void AddStatus(PieceStatus status)
         {
+            if (!IsContainStatus(status))
+            {
+                StatusList.Add(status);
+                status.OnRemove += (status) => StatusList.Remove(status);
+            }
         }
 
         public virtual bool TryMove(Point point, BoardModel board)
