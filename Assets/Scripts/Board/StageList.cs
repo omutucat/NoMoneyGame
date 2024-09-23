@@ -29,6 +29,7 @@ namespace NoMoney.Assets.Scripts.Board
                     new Pawn(new Point(8, 0), PieceSide.Enemy),
                     new Hero(new Point(1,1),PieceSide.Enemy),
                     new Troll(new Point(6,6),PieceSide.Player),
+                    new Ghost(new Point(8,7),PieceSide.Player),
                     new Pawn(new Point(0, 8), PieceSide.Player),
                     new Pawn(new Point(1, 8), PieceSide.Player),
                     new Pawn(new Point(2, 8), PieceSide.Player),
