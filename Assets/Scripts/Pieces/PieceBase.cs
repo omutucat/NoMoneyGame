@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NoMoney.Assets.Scripts.Board;
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
@@ -12,10 +13,6 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public PieceSide Side { get; protected set; }
 
-        public delegate void DestroyEventHandler();
-
-        public event DestroyEventHandler OnDestroy;
-
         /// <summary>
         /// 駒の属性
         /// </summary>
@@ -26,12 +23,6 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// </summary>
         /// <returns></returns>
         protected abstract List<Point> SpecificMovablePoints { get; }
-
-        /// <summary>
-        /// 破壊される時に呼び出すメソッド
-        /// OnDestroyイベントを発火する
-        /// </summary>
-        public void Destroy() => OnDestroy?.Invoke();
 
         /// <summary>
         /// 移動可能な座標
@@ -61,6 +52,32 @@ namespace NoMoney.Assets.Scripts.Pieces
 
         public virtual void OnTurnEnd()
         {
+        }
+
+        public virtual bool TryMove(Point point, BoardModel board)
+        {
+            if (!board.GetMovablePoints(this).Contains(point))
+            {
+                return false;
+            }
+
+            var objects = board.GetObjectsAt(point);
+
+            var canMove = objects switch
+            {
+                { } o when o.Any(o => o is IUnbreakable) => false,
+                { } o when o.Any(o => o is Piece p && p.Side == Side) => false,
+                _ => true
+            };
+
+            if (!canMove)
+            {
+                return false;
+            }
+
+            objects.ForEach(o => o.Destroy());
+            SetPosition(point);
+            return true;
         }
 
         /// <summary>

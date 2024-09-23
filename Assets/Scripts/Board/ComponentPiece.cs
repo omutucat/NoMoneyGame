@@ -69,6 +69,6 @@ namespace NoMoney.Assets.Scripts.Board
             _Piece.OnDestroy += DestroyMyself;
         }
 
-        private void DestroyMyself() => Destroy(gameObject);
+        private void DestroyMyself(BoardObject sender) => Destroy(gameObject);
     }
 }

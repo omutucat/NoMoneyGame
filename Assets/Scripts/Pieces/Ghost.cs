@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using NoMoney.Assets.Scripts.Board;
+using System.Linq;
 
 namespace NoMoney.Assets.Scripts.Pieces
 {
     /// <summary>
     /// 幽霊駒
-    /// 他の駒に重なることが出来、重なっている駒を行動不能にする
+    /// 他の駒に衝突すると、その駒をImmobilized状態にして自身は破壊される
     /// </summary>
     public class Ghost : Piece
     {
@@ -27,5 +29,36 @@ namespace NoMoney.Assets.Scripts.Pieces
             new(1, -1),
             new(0, -2)
         };
+
+        public override bool TryMove(Point point, BoardModel board)
+        {
+            if (!board.GetMovablePoints(this).Contains(point))
+            {
+                return false;
+            }
+
+            var objectsInPoint = board.GetObjectsAt(point);
+
+            switch (objectsInPoint)
+            {
+                case { } when objectsInPoint.Count == 0:
+                    SetPosition(point);
+                    break;
+                case { } when objectsInPoint.Any(o => o is Piece piece && piece.Side != Side):
+                    objectsInPoint.ForEach(o =>
+                    {
+                        if (o is Piece piece)
+                        {
+                            piece.StatusList.Add(PieceStatus.Immobilized);
+                        }
+                    });
+                    Destroy();
+                    break;
+                default:
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

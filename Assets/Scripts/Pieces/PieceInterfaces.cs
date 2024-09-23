@@ -12,4 +12,8 @@ namespace NoMoney.Assets.Scripts.Pieces
     public interface ITeleportable
     {
     }
+
+    public interface IUnbreakable
+    {
+    }
 }

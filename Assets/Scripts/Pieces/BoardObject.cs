@@ -51,6 +51,16 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// </summary>
         public Point Position { get; protected set; }
 
+        public delegate void DestroyEventHandler(BoardObject sender);
+
+        public event DestroyEventHandler OnDestroy;
+
         protected BoardObject(Point position) => Position = position;
+
+        /// <summary>
+        /// 破壊される時に呼び出すメソッド
+        /// OnDestroyイベントを発火する
+        /// </summary>
+        public virtual void Destroy() => OnDestroy?.Invoke(this);
     }
 }

@@ -24,6 +24,13 @@ namespace NoMoney.Assets.Scripts.Board
         {
             Size = size;
             Objects = objects;
+
+            if (!IsValidBoard())
+            {
+                throw new System.ArgumentException("Invalid board");
+            }
+
+            Objects.Where(o => o is Piece).Cast<Piece>().ToList().ForEach(p => p.OnDestroy += OnDestroyPiece);
         }
 
         /// <summary>
@@ -53,29 +60,15 @@ namespace NoMoney.Assets.Scripts.Board
             return pieces.FirstOrDefault(piece => GetMovablePoints(piece).Count > 0);
         }
 
-        public void DestroyPieceAt(Point point, PieceSide side)
-        {
-            var pieceAt = GetMovablePiecesAt(point);
-            switch (pieceAt)
-            {
-                case null:
-                    return;
-                case Piece piece when piece.Side == side:
-                    return;
-                default:
-                    Objects.Remove(pieceAt);
-                    pieceAt.Destroy();
-                    break;
-            }
-        }
+        public void OnDestroyPiece(BoardObject sender) => Objects.Remove(sender);
 
         /// <summary>
         /// 指定した座標に存在するオブジェクトを全て返す
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private List<BoardObject> GetObjectsAt(Point point) =>
-            Objects.Where(o => o.Position.X == point.X && o.Position.Y == point.Y).ToList();
+        public List<BoardObject> GetObjectsAt(Point point) =>
+            Objects.Where(o => o.Position.Equals(point)).ToList();
 
         /// <summary>
         /// 指定したピースが移動可能な座標を返す
@@ -164,28 +157,7 @@ namespace NoMoney.Assets.Scripts.Board
             piece.SetPosition(point);
         }
 
-        public bool TryMovePiece(Piece piece, Point point)
-        {
-            if (!GetMovablePoints(piece).Contains(point))
-            {
-                return false;
-            }
-
-            var objInPoint = GetObjectsAt(point).FirstOrDefault();
-
-            switch (objInPoint)
-            {
-                case null:
-                    MovePiece(piece, point);
-                    return true;
-                case Piece pieceAt when pieceAt.Side != piece.Side:
-                    DestroyPieceAt(point, piece.Side);
-                    MovePiece(piece, point);
-                    return true;
-                default:
-                    return false;
-            }
-        }
+        public bool TryMovePiece(Piece piece, Point point) => piece.TryMove(point, this);
 
         /// <summary>
         /// 指定した座標が盤面の範囲外かを返す
