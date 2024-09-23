@@ -28,6 +28,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
 
                 _Manager._BoardPanel.Initialize(_Manager.Board);
                 _Manager._BoardPanel.AddListener(_Manager);
+                _Manager.turn = new Turn();
                 Debug.Log("Game initialized with StartState");
 
                 return new SelectState(_Manager);
@@ -58,6 +59,13 @@ namespace NoMoney.Assets.Scripts.Pages.Game
                     return this;
                 }
 
+                // 敵の駒を押したときは何もしない
+                if (obj.Side != _Manager.turn.GameSide())
+                {
+                    Debug.Log("SelectState OnClick triggered at " + point.ToDebugString());
+                    return this;
+                }
+
                 _Manager.SelectedPiece = obj;
 
                 return new MoveState(_Manager);
@@ -71,7 +79,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             public MoveState(ComponentGameManager manager) => _Manager = manager;
 
             public IGameState Update() => this;
-
+            
             public IGameState OnClick(Point point)
             {
                 Debug.Log("MoveState OnClick triggered at " + point.ToDebugString());
@@ -100,6 +108,9 @@ namespace NoMoney.Assets.Scripts.Pages.Game
                     return this;
                 }
 
+                //移動先に敵駒がいたら破壊する
+                _Manager.Board.DestroyPieceAt(point,_Manager.turn.GameSide());
+                
                 _Manager.Board.MovePiece(_Manager.SelectedPiece, point);
                 Debug.Log("Valid move to " + point);
 
@@ -119,12 +130,16 @@ namespace NoMoney.Assets.Scripts.Pages.Game
                 _Manager = manager;
             }
 
-            public IGameState Update() => _Manager.Board.JudgeGameState() switch
+            public IGameState Update()
             {
-                GameStatus.Win or GameStatus.Lose or GameStatus.Draw => new EndState(_Manager),
-                GameStatus.Playing => new SelectState(_Manager),
-                _ => throw new Exception("Invalid game state"),
-            };
+                _Manager.turn.OnTurnEnd();
+                return _Manager.Board.JudgeGameState() switch
+                {
+                    GameStatus.Win or GameStatus.Lose or GameStatus.Draw => new EndState(_Manager),
+                    GameStatus.Playing => new SelectState(_Manager),
+                    _ => throw new Exception("Invalid game state"),
+                };
+            }
 
             public IGameState OnClick(Point point)
             {

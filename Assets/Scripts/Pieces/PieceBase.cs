@@ -23,6 +23,15 @@ namespace NoMoney.Assets.Scripts.Pieces
         /// <returns></returns>
         protected abstract List<Point> SpecificMovablePoints { get; }
 
+
+        /// <summary>
+        /// この駒を破壊する
+        /// </summary>
+        public void Destroy()
+        {
+            //ComponentPieceがこれを持っている
+        }
+
         /// <summary>
         /// 移動可能な座標
         /// </summary>

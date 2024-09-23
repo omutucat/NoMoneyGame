@@ -15,6 +15,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         [SerializeField] private ComponentBoardPanel _BoardPanel;
         private List<Point> _MovablePoints = new();
         private Piece _SelectedPiece = null;
+        public Turn turn { get; private set; }
 
         private Piece SelectedPiece
         {
@@ -38,6 +39,9 @@ namespace NoMoney.Assets.Scripts.Pages.Game
                 _BoardPanel.SetMovableSquares(value);
             }
         }
+        
+        
+        
         public void MoveScene() => SceneManager.LoadScene("Result");
 
         private void Start() => CurrentState = new StartState(this);

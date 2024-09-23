@@ -54,6 +54,26 @@ namespace NoMoney.Assets.Scripts.Board
             return pieces.FirstOrDefault(piece => GetMovablePoints(piece).Count > 0);
         }
 
+        public void DestroyPieceAt(Point point,PieceSide side)
+        {
+            var pieceAt = GetMovablePiecesAt(point);
+            if (pieceAt == null)
+            {
+                return;
+            }
+            if (pieceAt.Side == side)
+            {
+                return;
+            }
+            else
+            {
+                //Objectsから除く
+                Objects.Remove(pieceAt);
+                //破壊
+                pieceAt.Destroy();
+            }
+        }
+
         /// <summary>
         /// 指定した座標に存在するオブジェクトを全て返す
         /// </summary>
