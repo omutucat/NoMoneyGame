@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NoMoney.Assets.Scripts.Board;
 using NoMoney.Assets.Scripts.Pieces;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Point = NoMoney.Assets.Scripts.Pieces.Point;
 
 namespace NoMoney.Assets.Scripts.Pages.Game
@@ -13,9 +13,10 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         private IGameState CurrentState { get; set; }
         public BoardModel Board { get; private set; }
         [SerializeField] private ComponentBoardPanel _BoardPanel;
-        private List<Point> _MovablePoints = new();
+        [SerializeField] private Text _MessageText;
+        [SerializeField] private Text _TurnText;
         private Piece _SelectedPiece = null;
-        public Turn turn { get; private set; }
+        public Turn Turn { get; private set; }
 
         private Piece SelectedPiece
         {
@@ -32,8 +33,6 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         {
             set
             {
-                _MovablePoints = value;
-
                 // 移動可能マスが更新されたらパネルに反映
                 _BoardPanel.SetMovableSquares(value);
             }
@@ -46,5 +45,11 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         private void Update() => CurrentState = CurrentState.Update();
 
         public void OnSquareClick(Point point) => CurrentState = CurrentState.OnClick(point);
+
+        private interface IGameState
+        {
+            IGameState Update();
+            IGameState OnClick(Point point);
+        }
     }
 }

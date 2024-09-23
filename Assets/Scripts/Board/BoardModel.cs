@@ -86,16 +86,10 @@ namespace NoMoney.Assets.Scripts.Board
         /// <summary>
         /// 各こまのターンエンド処理をする
         /// </summary>
-        public void OnTurnEnd()
-        {
-            foreach (var boardObject in Objects)
-            {
-                if (boardObject is Piece piece)
-                {
-                    piece.OnTurnEnd();
-                }
-            }
-        }
+        public void OnTurnChanged(PieceSide side) =>
+            // 指定したサイドの駒のターンエンド処理をする
+            Objects.Where(o => o is Piece piece && piece.Side == side).Cast<Piece>().ToList()
+                .ForEach(p => p.OnTurnEnd());
 
         /// <summary>
         /// テレポート可能な駒の移動可能な座標を返す
