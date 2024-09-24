@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using NoMoney.Assets.Scripts.Pieces;
+using NoMoney.Assets.Scripts.Pages.Game;
 
 namespace NoMoney.Assets.Scripts.Board
 {
@@ -62,9 +63,9 @@ namespace NoMoney.Assets.Scripts.Board
         /// <summary>
         /// 各こまのターンエンド処理をする
         /// </summary>
-        public void OnTurnChanged(PieceSide side) =>
+        public void OnTurnChanged(Turn turn) =>
             // 指定したサイドの駒のターンエンド処理をする
-            Objects.Where(o => o is Piece piece && piece.Side == side).Cast<Piece>().ToList()
+            Objects.Where(o => o is Piece piece && piece.Side == turn.TurnPlayer).Cast<Piece>().ToList()
                 .ForEach(p => p.OnTurnChanged());
 
         /// <summary>

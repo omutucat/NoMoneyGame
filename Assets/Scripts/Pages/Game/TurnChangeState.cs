@@ -13,7 +13,6 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             public IGameState Update()
             {
                 _Manager.Turn.ToNextPlayer();
-                _Manager._TurnText.text = _Manager.Turn.Count.ToString();
                 return new SelectState(_Manager);
             }
 

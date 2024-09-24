@@ -7,7 +7,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
     {
         public int Count = 1;
 
-        public delegate void TurnChangedHandler(PieceSide side);
+        public delegate void TurnChangedHandler(Turn turn);
 
         public event TurnChangedHandler OnTurnChanged;
 
@@ -18,7 +18,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
             // 敵の行動が終わればターンを進める
             TurnPlayer = TurnPlayer == PieceSide.Player ? PieceSide.Enemy : PieceSide.Player;
             Count += TurnPlayer == PieceSide.Player ? 1 : 0;
-            OnTurnChanged?.Invoke(TurnPlayer);
+            OnTurnChanged?.Invoke(this);
         }
     }
 }

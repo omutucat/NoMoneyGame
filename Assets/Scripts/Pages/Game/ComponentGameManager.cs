@@ -14,7 +14,7 @@ namespace NoMoney.Assets.Scripts.Pages.Game
         public BoardModel Board { get; private set; }
         [SerializeField] private ComponentBoardPanel _BoardPanel;
         [SerializeField] private Text _MessageText;
-        [SerializeField] private Text _TurnText;
+        [SerializeField] private ComponentTurn _TurnComponent;
         private Piece _SelectedPiece = null;
         public Turn Turn { get; private set; }
 
