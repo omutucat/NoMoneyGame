@@ -303,6 +303,9 @@ resharper_suggest_var_or_type_simple_types_highlighting = hint
 # CS8618: null 非許容のフィールドには、コンストラクターの終了時に null 以外の値が入っていなければなりません。'required' 修飾子を追加するか、Null 許容として宣言することを検討してください。
 dotnet_diagnostic.CS8618.severity = none
 
+# CS8632: '#nullable' 注釈コンテキスト内のコードでのみ、Null 許容参照型の注釈を使用する必要があります。
+dotnet_diagnostic.CS8632.severity = none
+
 [*.{asax,ascx,aspx,axaml,cs,cshtml,htm,html,master,paml,razor,skin,vb,xaml,xamlx,xoml}]
 indent_style = space
 indent_size = 4

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using NoMoney.Assets.Scripts.Game.Board;
 using System.Linq;
+using NoMoney.Assets.Scripts.Game.Board;
 
 namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {

@@ -162,4 +162,3 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         Enemy
     }
 }
-
