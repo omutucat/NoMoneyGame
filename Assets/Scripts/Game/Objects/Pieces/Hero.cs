@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NoMoney.Assets.Scripts.Board;
+using NoMoney.Assets.Scripts.Game.Board;
+using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using Unity.VisualScripting;
 
-namespace NoMoney.Assets.Scripts.Pieces
+namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {
     /// <summary>
     /// 勇者の駒

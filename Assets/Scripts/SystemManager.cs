@@ -1,5 +1,5 @@
 using System;
-using NoMoney.Assets.Scripts.Board;
+using NoMoney.Assets.Scripts.Game.Board;
 using UnityEngine;
 
 namespace NoMoney.Assets.Scripts

@@ -1,7 +1,6 @@
 ﻿using System;
-using NoMoney.Assets.Scripts.Board;
 
-namespace NoMoney.Assets.Scripts.Pieces
+namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {
     /// <summary>
     /// 座標

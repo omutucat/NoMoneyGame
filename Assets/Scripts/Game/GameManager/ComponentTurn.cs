@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using NoMoney.Assets.Scripts.Pieces;
+using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace NoMoney.Assets.Scripts.Pages.Game
+namespace NoMoney.Assets.Scripts.Game.GameManager
 {
     public class ComponentTurn : MonoBehaviour
     {

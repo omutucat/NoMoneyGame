@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using NoMoney.Assets.Scripts.Board;
-using NoMoney.Assets.Scripts.Pieces;
+using NoMoney.Assets.Scripts.Game.Board;
+using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Point = NoMoney.Assets.Scripts.Pieces.Point;
+using Point = NoMoney.Assets.Scripts.Game.Objects.Pieces.Point;
 
-namespace NoMoney.Assets.Scripts.Pages.Game
+namespace NoMoney.Assets.Scripts.Game.GameManager
 {
     public partial class ComponentGameManager : MonoBehaviour, IBoardEventListener
     {

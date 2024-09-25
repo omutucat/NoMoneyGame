@@ -1,9 +1,9 @@
 
 using System.Linq;
-using NoMoney.Assets.Scripts.Pieces;
+using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 
-namespace NoMoney.Assets.Scripts.Pages.Game
+namespace NoMoney.Assets.Scripts.Game.GameManager
 {
     public partial class ComponentGameManager
     {

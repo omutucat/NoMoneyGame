@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace NoMoney.Assets.Scripts.Pieces
+namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {
     public static class PieceTextures
     {

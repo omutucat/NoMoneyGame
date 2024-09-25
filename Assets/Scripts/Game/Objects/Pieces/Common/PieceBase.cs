@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using NoMoney.Assets.Scripts.Board;
+using NoMoney.Assets.Scripts.Game.Board;
 
-namespace NoMoney.Assets.Scripts.Pieces
+namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {
     /// <summary>
     /// 駒の基底クラス

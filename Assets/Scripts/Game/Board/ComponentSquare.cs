@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NoMoney.Assets.Scripts.Pieces;
+using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace NoMoney.Assets.Scripts.Board
+namespace NoMoney.Assets.Scripts.Game.Board
 {
     public class ComponentSquare : MonoBehaviour
     {

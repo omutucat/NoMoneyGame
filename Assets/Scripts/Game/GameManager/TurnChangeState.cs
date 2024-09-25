@@ -1,6 +1,6 @@
-using NoMoney.Assets.Scripts.Pieces;
+using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 
-namespace NoMoney.Assets.Scripts.Pages.Game
+namespace NoMoney.Assets.Scripts.Game.GameManager
 {
     public partial class ComponentGameManager
     {

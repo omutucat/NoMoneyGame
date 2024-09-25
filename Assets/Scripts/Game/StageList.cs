@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NoMoney.Assets.Scripts.Pieces;
+using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using System.Linq;
-using Unity.VisualScripting;
+using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 
-namespace NoMoney.Assets.Scripts.Board
+namespace NoMoney.Assets.Scripts.Game.Board
 {
     public enum StageName
     {

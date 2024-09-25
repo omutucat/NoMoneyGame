@@ -1,4 +1,4 @@
-﻿namespace NoMoney.Assets.Scripts.Pieces
+﻿namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {
     public abstract class PieceStatus
     {
