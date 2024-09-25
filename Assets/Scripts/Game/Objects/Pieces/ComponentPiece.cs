@@ -35,10 +35,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             PositionUpdate();
         }
 
-        private void Update()
-        {
-            PositionUpdate();
-        }
+        private void Update() => PositionUpdate();
 
         /// <summary>
         /// 位置の計算

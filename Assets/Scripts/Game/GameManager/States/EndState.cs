@@ -9,10 +9,7 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
         {
             private ComponentGameManager _Manager;
 
-            public EndState(ComponentGameManager manager)
-            {
-                _Manager = manager;
-            }
+            public EndState(ComponentGameManager manager) => _Manager = manager;
 
             public IGameState Update()
             {

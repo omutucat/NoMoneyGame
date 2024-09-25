@@ -14,10 +14,8 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         private int _TurnCount = 0;
         private const int IMMOBILE_TURNS = 5;
 
-        public Hero(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
-        {
-            AddStatus(new InSleep(IMMOBILE_TURNS));
-        }
+        public Hero(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null)
+            : base(position, side, statusList) => AddStatus(new InSleep(IMMOBILE_TURNS));
 
         protected override List<Point> SpecificMovablePoints =>
             // 8方向全てに進める
