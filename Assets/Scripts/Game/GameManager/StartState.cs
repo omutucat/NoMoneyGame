@@ -1,7 +1,6 @@
 using System;
 using NoMoney.Assets.Scripts.Game.Board;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
-using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 
 namespace NoMoney.Assets.Scripts.Game.GameManager

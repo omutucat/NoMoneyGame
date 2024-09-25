@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using static System.Linq.Enumerable;
-using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 
 namespace NoMoney.Assets.Scripts.Game.Board
 {

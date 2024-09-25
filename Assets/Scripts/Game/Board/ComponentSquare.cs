@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace NoMoney.Assets.Scripts.Game.Board
 {

@@ -2,7 +2,6 @@ using System.Linq;
 using System.Collections.Generic;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using NoMoney.Assets.Scripts.Game.GameManager;
-using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 
 namespace NoMoney.Assets.Scripts.Game.Board
 {
