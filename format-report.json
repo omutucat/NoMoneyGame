@@ -1,0 +1,74 @@
+[
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "80dbb4d5-400a-4dcc-8e02-721396a90dc6"
+      },
+      "Id": "958e84c4-1462-4fcb-91a0-4c6d5ad5e0ae"
+    },
+    "FileName": "BoardPoint.cs",
+    "FilePath": "D:\\GitRepos\\NoMoneyGame\\Assets\\Scripts\\Game\\Objects\\BoardPoint.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 31,
+        "CharNumber": 2,
+        "DiagnosticId": "FINALNEWLINE",
+        "FormatDescription": "\u6700\u5F8C\u306E\u6539\u884C\u3092\u4FEE\u6B63\u3057\u307E\u3059\u3002 Delete 2 characters."
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "80dbb4d5-400a-4dcc-8e02-721396a90dc6"
+      },
+      "Id": "134e3225-56a0-4426-ad47-39e73c915cad"
+    },
+    "FileName": "CalcState.cs",
+    "FilePath": "D:\\GitRepos\\NoMoneyGame\\Assets\\Scripts\\Game\\GameManager\\States\\CalcState.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 33,
+        "CharNumber": 50,
+        "DiagnosticId": "IDE0060",
+        "FormatDescription": "info IDE0060: \u672A\u4F7F\u7528\u306E\u30D1\u30E9\u30E1\u30FC\u30BF\u30FC \u0027point\u0027 \u3092\u524A\u9664"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "80dbb4d5-400a-4dcc-8e02-721396a90dc6"
+      },
+      "Id": "a70ec079-79f6-411a-9bc2-1b466a2aa20f"
+    },
+    "FileName": "StartState.cs",
+    "FilePath": "D:\\GitRepos\\NoMoneyGame\\Assets\\Scripts\\Game\\GameManager\\States\\StartState.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 48,
+        "CharNumber": 50,
+        "DiagnosticId": "IDE0060",
+        "FormatDescription": "info IDE0060: \u672A\u4F7F\u7528\u306E\u30D1\u30E9\u30E1\u30FC\u30BF\u30FC \u0027point\u0027 \u3092\u524A\u9664"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "80dbb4d5-400a-4dcc-8e02-721396a90dc6"
+      },
+      "Id": "e56efa15-0524-46d7-8712-75d800cf9f30"
+    },
+    "FileName": "SelectState.cs",
+    "FilePath": "D:\\GitRepos\\NoMoneyGame\\Assets\\Scripts\\Game\\GameManager\\States\\SelectState.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 24,
+        "CharNumber": 17,
+        "DiagnosticId": "IDE0019",
+        "FormatDescription": "info IDE0019: \u30D1\u30BF\u30FC\u30F3 \u30DE\u30C3\u30C1\u30F3\u30B0\u3092\u4F7F\u7528\u3057\u307E\u3059"
+      }
+    ]
+  }
+]

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NoMoney.Assets.Scripts.Game.Objects;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 
 namespace NoMoney.Assets.Scripts.Game.Board
@@ -17,27 +18,27 @@ namespace NoMoney.Assets.Scripts.Game.Board
                 size: new BoardSize(9, 9),
                 objects: new List<BoardObject>
                 {
-                    new Pawn(new Point(0, 0), PieceSide.Enemy),
-                    new Pawn(new Point(1, 0), PieceSide.Enemy),
-                    new Pawn(new Point(2, 0), PieceSide.Enemy),
-                    new Pawn(new Point(3, 0), PieceSide.Enemy),
-                    new Pawn(new Point(4, 0), PieceSide.Enemy),
-                    new Pawn(new Point(5, 0), PieceSide.Enemy),
-                    new Pawn(new Point(6, 0), PieceSide.Enemy),
-                    new Pawn(new Point(7, 0), PieceSide.Enemy),
-                    new Pawn(new Point(8, 0), PieceSide.Enemy),
-                    new Hero(new Point(1,1),PieceSide.Enemy),
-                    new Troll(new Point(6,6),PieceSide.Player),
-                    new Ghost(new Point(8,7),PieceSide.Player),
-                    new Pawn(new Point(0, 8), PieceSide.Player),
-                    new Pawn(new Point(1, 8), PieceSide.Player),
-                    new Pawn(new Point(2, 8), PieceSide.Player),
-                    new Pawn(new Point(3, 8), PieceSide.Player),
-                    new Pawn(new Point(4, 8), PieceSide.Player),
-                    new Pawn(new Point(5, 8), PieceSide.Player),
-                    new Pawn(new Point(6, 8), PieceSide.Player),
-                    new Pawn(new Point(7, 8), PieceSide.Player),
-                    new Pawn(new Point(8, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(0, 0), PieceSide.Enemy),
+                    new Pawn(new BoardPoint(1, 0), PieceSide.Enemy),
+                    new Pawn(new BoardPoint(2, 0), PieceSide.Enemy),
+                    new Pawn(new BoardPoint(3, 0), PieceSide.Enemy),
+                    new Pawn(new BoardPoint(4, 0), PieceSide.Enemy),
+                    new Pawn(new BoardPoint(5, 0), PieceSide.Enemy),
+                    new Pawn(new BoardPoint(6, 0), PieceSide.Enemy),
+                    new Pawn(new BoardPoint(7, 0), PieceSide.Enemy),
+                    new Pawn(new BoardPoint(8, 0), PieceSide.Enemy),
+                    new Hero(new BoardPoint(1,1),PieceSide.Enemy),
+                    new Troll(new BoardPoint(6,6),PieceSide.Player),
+                    new Ghost(new BoardPoint(8,7),PieceSide.Player),
+                    new Pawn(new BoardPoint(0, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(1, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(2, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(3, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(4, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(5, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(6, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(7, 8), PieceSide.Player),
+                    new Pawn(new BoardPoint(8, 8), PieceSide.Player),
                 }
             ))
         };

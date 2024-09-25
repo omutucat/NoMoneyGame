@@ -1,5 +1,5 @@
-
 using System.Linq;
+using NoMoney.Assets.Scripts.Game.Objects;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 
@@ -7,7 +7,9 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
 {
     public partial class ComponentGameManager
     {
-
+        /// <summary>
+        /// 駒の移動待ち状態
+        /// </summary>
         private class MoveState : IGameState
         {
             private ComponentGameManager _Manager;
@@ -16,10 +18,11 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
 
             public IGameState Update() => this;
 
-            public IGameState OnClick(Point point)
+            public IGameState OnClick(BoardPoint point)
             {
                 Debug.Log("MoveState OnClick triggered at " + point.ToDebugString());
 
+                // TODO: この形の書き方結構見かけるので、どこかで関数化する
                 var clickedPiece = _Manager.Board.GetObjectsAt(point).FirstOrDefault(o => o is Piece) as Piece;
 
                 if (clickedPiece is not null && clickedPiece.Side == _Manager.Turn.TurnPlayer)
@@ -28,8 +31,9 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
                     return this;
                 }
 
-                switch (_Manager.Board.TryMovePiece(_Manager.SelectedPiece, point))
+                switch (_Manager.SelectedPiece.TryMove(point, _Manager.Board))
                 {
+                    // TODO: TryMoveの返り値の表現力を高めたら、なんで移動できなかったのかをより詳しく区別出来そう
                     case true:
                         _Manager.SelectedPiece = null;
                         _Manager._MessageText.text = "";

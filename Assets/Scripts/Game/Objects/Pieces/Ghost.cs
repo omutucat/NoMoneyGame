@@ -10,11 +10,11 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
     /// </summary>
     public class Ghost : Piece
     {
-        public Ghost(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
+        public Ghost(BoardPoint position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
         }
 
-        protected override List<Point> SpecificMovablePoints =>
+        protected override List<BoardPoint> MoveRange =>
         // 前三方向と、前2マス先に進める
         // 0 x 0
         // x x x
@@ -30,7 +30,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             new(0, -2)
         };
 
-        public override bool TryMove(Point point, BoardModel board)
+        public override bool TryMove(BoardPoint point, BoardModel board)
         {
             if (!GetMovablePoints(board).Contains(point))
             {
@@ -42,7 +42,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             switch (objectsInPoint)
             {
                 case { } when objectsInPoint.Count == 0:
-                    SetPosition(point);
+                    Position = point;
                     break;
                 case { } when objectsInPoint.Any(o => o is Piece piece && piece.Side != Side):
                     objectsInPoint.ForEach(o =>

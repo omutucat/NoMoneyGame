@@ -5,7 +5,7 @@ namespace NoMoney.Assets.Scripts
 {
     public class SystemManager : MonoBehaviour
     {
-        public static StageName CurrentStage { get; set; } = StageName.Stage1;
+        public static StageName SelectedStage { get; set; } = StageName.Stage1;
         public static SystemManager? Instance { get; private set; }
 
         private void Awake()

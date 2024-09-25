@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 namespace NoMoney.Assets.Scripts.Game.GameManager
 {
+    /// <summary>
+    /// ターンの描画を行うコンポーネント
+    /// </summary>
     public class ComponentTurn : MonoBehaviour
     {
         [SerializeField] private Text _TurnCountText;

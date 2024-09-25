@@ -7,11 +7,11 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
     /// </summary>
     public class Pawn : Piece
     {
-        public Pawn(Point position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
+        public Pawn(BoardPoint position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
         }
 
-        protected override List<Point> SpecificMovablePoints => new()
+        protected override List<BoardPoint> MoveRange => new()
         //前三方向に進める
         {
             new(0, -1),

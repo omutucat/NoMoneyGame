@@ -5,43 +5,43 @@ using NoMoney.Assets.Scripts.Game.Board;
 namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {
     /// <summary>
-    /// 駒の基底クラス
+    /// 駒
     /// </summary>
     public abstract class Piece : BoardObject
     {
         /// <summary>
-        /// 駒の向き
+        /// 向き
         /// </summary>
         public PieceDirection Direction { get; protected set; }
 
         /// <summary>
-        /// 駒の所属
+        /// 所属
         /// </summary>
         public PieceSide Side { get; protected set; }
 
         /// <summary>
-        /// 駒の属性
+        /// 移動範囲
+        /// </summary>
+        /// <returns></returns>
+        protected abstract List<BoardPoint> MoveRange { get; }
+
+        /// <summary>
+        /// 状態(バフ・デバフなど)のリスト
         /// </summary>
         public List<PieceStatus> StatusList { get; private set; }
 
-        protected Piece(Point position, PieceSide side, IEnumerable<PieceStatus>? statusList = null) : base(position)
+        protected Piece(BoardPoint position, PieceSide side, IEnumerable<PieceStatus>? statusList = null) : base(position)
         {
             Side = side;
             StatusList = statusList?.ToList() ?? new List<PieceStatus>();
             Direction = side switch
             {
-                // 向きは所属によって設定する
+                // NOTE: 向きは所属によって設定する
                 PieceSide.Player => PieceDirection.Up,
                 PieceSide.Enemy => PieceDirection.Down,
                 _ => throw new System.NotImplementedException()
             };
         }
-
-        /// <summary>
-        /// 駒の向きを設定する
-        /// </summary>
-        /// <param name="position"></param>
-        public void SetPosition(Point position) => Position = position;
 
         /// <summary>
         /// ステータスを追加する
@@ -51,67 +51,13 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         {
             if (!StatusList.Contains(status))
             {
+                // NOTE: 同じステータスは重複しない
                 StatusList.Add(status);
 
-                // ステータスが削除されたらリストから削除する
+                // NOTE: ステータスが解消された時に自動でリストから削除されるよう設定する
                 status.OnRemove += (status) => StatusList.Remove(status);
             }
         }
-
-        /// <summary>
-        /// 指定したピースが移動可能な座標を返す
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <returns></returns>
-        public List<Point> GetMovablePoints(BoardModel board) => StatusList switch
-        {
-            { } s when s.Any(s => s is InSleep or Immobilized) => new List<Point>(),
-            _ => JudgeMovablePoints(CalculateMovablePoints(), board),
-        };
-
-        /// <summary>
-        /// 方向を加味して移動可能な座標を計算する
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        private List<Point> CalculateMovablePoints() => Direction switch
-        {
-            PieceDirection.Up => SpecificMovablePoints.Select(p => new Point(Position.X + p.X, Position.Y + p.Y)).ToList(),
-            PieceDirection.Down => SpecificMovablePoints.Select(p => new Point(Position.X - p.X, Position.Y - p.Y)).ToList(),
-            _ => throw new System.NotImplementedException()
-        };
-
-        /// <summary>
-        /// ターンが変わった時の処理
-        /// </summary>
-        public void OnTurnChanged()
-        {
-            // ターンエンド時に効果を発揮するステータスを処理する
-            StatusList.Where(s => s is ITurnChangeListener).Cast<ITurnChangeListener>().ToList().ForEach(s => s.OnTurnEnd());
-            OnTurnChangedHook();
-        }
-
-        /// <summary>
-        /// 派生クラスで実装する移動可能な座標
-        /// </summary>
-        /// <returns></returns>
-        protected abstract List<Point> SpecificMovablePoints { get; }
-
-        /// <summary>
-        /// 実際にその座標に移動可能か判定する
-        /// 派生クラスでオーバーライドすることで特殊な移動を実装可能
-        /// </summary>
-        /// <param name="idealMovablePoints"></param>
-        /// <param name="board"></param>
-        /// <returns></returns>
-        protected virtual List<Point> JudgeMovablePoints(List<Point> idealMovablePoints, BoardModel board) =>
-            idealMovablePoints.Where(p => !board.IsPositionOutsideBounds(p)).ToList();
-
-        /// <summary>
-        /// ターンが変わった時に追加で実行される処理
-        /// 派生クラスでオーバーライドすることで特殊な処理を実装可能
-        /// </summary>
-        public virtual void OnTurnChangedHook() { }
 
         /// <summary>
         /// 指定した座標に移動を試みる
@@ -120,8 +66,9 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         /// <param name="point"></param>
         /// <param name="board"></param>
         /// <returns></returns>
-        public virtual bool TryMove(Point point, BoardModel board)
+        public virtual bool TryMove(BoardPoint point, BoardModel board)
         {
+            // TODO: 移動結果を単なるBool型でなくクラス化し、色んな情報を返せるようにしたい
             if (!GetMovablePoints(board).Contains(point))
             {
                 return false;
@@ -129,6 +76,8 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 
             var objects = board.GetObjectsAt(point);
 
+            // TODO: 攻撃時や被攻撃時の処理をより抽象化したい
+            // Unbreakableなオブジェクトをここで判定するのではなく、相手の駒の判定関数を使用できるようにしたり
             var canMove = objects switch
             {
                 { } o when o.Any(o => o is IUnbreakable) => false,
@@ -142,12 +91,66 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             }
 
             objects.ForEach(o => o.Destroy());
-            SetPosition(point);
+            Position = point;
             return true;
         }
 
+        /// <summary>
+        /// 指定したピースが移動可能な座標を返す
+        /// </summary>
+        /// <param name="piece"></param>
+        /// <returns></returns>
+        public List<BoardPoint> GetMovablePoints(BoardModel board) => StatusList switch
+        {
+            // TODO: 移動不可の判定をここではなく、ステータス側で行うようにしたい
+            { } s when s.Any(s => s is InSleep or Immobilized) => new List<BoardPoint>(),
+            _ => JudgeMovablePoints(GetReachablePoints(), board),
+        };
+
+        /// <summary>
+        /// 方向を加味して移動可能な座標を計算する
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private List<BoardPoint> GetReachablePoints() => Direction switch
+        {
+            PieceDirection.Up => MoveRange.Select(p => new BoardPoint(Position.X + p.X, Position.Y + p.Y)).ToList(),
+            PieceDirection.Down => MoveRange.Select(p => new BoardPoint(Position.X - p.X, Position.Y - p.Y)).ToList(),
+            _ => throw new System.NotImplementedException()
+        };
+
+        /// <summary>
+        /// ターンが変わった時の処理
+        /// </summary>
+        public void OnTurnChanged()
+        {
+            StatusList.Where(s => s is ITurnChangeListener).Cast<ITurnChangeListener>().ToList().ForEach(s => s.OnTurnEnd());
+
+            // NOTE: hookを派生クラスでオーバーライドすることで追加の処理を実行可能
+            OnTurnChangedHook();
+        }
+
+        /// <summary>
+        /// 実際にその座標に移動可能か判定する
+        /// 派生クラスでオーバーライドすることで特殊な移動を実装可能
+        /// </summary>
+        /// <param name="reachablePoints"></param>
+        /// <param name="board"></param>
+        /// <returns></returns>
+        protected virtual List<BoardPoint> JudgeMovablePoints(List<BoardPoint> reachablePoints, BoardModel board) =>
+            reachablePoints.Where(p => !board.IsPositionOutsideBounds(p)).ToList();
+
+        /// <summary>
+        /// ターンが変わった時に追加で実行される処理
+        /// 派生クラスでオーバーライドすることで特殊な処理を実装可能
+        /// </summary>
+        public virtual void OnTurnChangedHook() { }
+
     }
 
+    /// <summary>
+    /// 駒の向き
+    /// </summary>
     public enum PieceDirection
     {
         Up,
@@ -156,8 +159,12 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         // Right
     }
 
+    /// <summary>
+    /// 駒の所属
+    /// </summary>
     public enum PieceSide
     {
+        // TODO: 所属の情報ってここじゃないところに書くべきかも
         Player,
         Enemy
     }

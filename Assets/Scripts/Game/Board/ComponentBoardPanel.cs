@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NoMoney.Assets.Scripts.Game.Objects;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
     public struct SquareObject
     {
         public GameObject Square;
-        public Point Point;
+        public BoardPoint Point;
     }
 
     /// <summary>
@@ -102,7 +103,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         private void CreateBoardSquares(BoardModel board, float squareWidth, float squareHeight)
         {
             var points = Range(0, board.Size.Width)
-                .SelectMany(x => Range(0, board.Size.Height).Select(y => new Point(x, y)));
+                .SelectMany(x => Range(0, board.Size.Height).Select(y => new BoardPoint(x, y)));
 
             foreach (var point in points)
             {
@@ -116,7 +117,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// <param name="point"></param>
         /// <param name="squareWidth"></param>
         /// <param name="squareHeight"></param>
-        private void CreateBoardSquare(Point point, float squareWidth, float squareHeight)
+        private void CreateBoardSquare(BoardPoint point, float squareWidth, float squareHeight)
         {
             // 座標を計算してオブジェクトを生成
             var squareObj = Instantiate(_BoardSquarePrefab, transform, false);
@@ -132,7 +133,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// マス目がクリックされた時の処理
         /// </summary>
         /// <param name="point"></param>
-        private void OnSquareClicked(Point point)
+        private void OnSquareClicked(BoardPoint point)
         {
             Debug.Log($"Square Clicked: {point.ToDebugString()}");
             _BoardEventListeners?.ForEach(listener => listener.OnSquareClick(point));
@@ -142,7 +143,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// マス目を移動可能状態に設定する
         /// </summary>
         /// <param name="points"></param>
-        public void SetMovableSquares(List<Point> points)
+        public void SetMovableSquares(List<BoardPoint> points)
         {
             ResetSquareStates();
 
@@ -168,7 +169,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// </summary>
         /// <param name="point"></param>
         /// <param name="state"></param>
-        public void SetSquareState(Point point, SquareState state)
+        public void SetSquareState(BoardPoint point, SquareState state)
         {
             var square = _SquareObjects.FirstOrDefault(s => s.Point.Equals(point));
             if (square.Square == null)

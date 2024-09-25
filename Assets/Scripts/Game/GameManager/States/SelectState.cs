@@ -1,4 +1,5 @@
 using System.Linq;
+using NoMoney.Assets.Scripts.Game.Objects;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 
@@ -6,6 +7,9 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
 {
     public partial class ComponentGameManager
     {
+        /// <summary>
+        /// 駒の選択待ち状態
+        /// </summary>
         private class SelectState : IGameState
         {
             private ComponentGameManager _Manager;
@@ -14,27 +18,23 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
 
             public IGameState Update() => this;
 
-            public IGameState OnClick(Point point)
+            public IGameState OnClick(BoardPoint point)
             {
                 Debug.Log("SelectState OnClick triggered at " + point.ToDebugString());
 
-                // 駒が無ければ何もしない
-                if (_Manager.Board.GetObjectsAt(point).FirstOrDefault(o => o is Piece) is not Piece obj)
+
+                if (_Manager.Board.GetObjectsAt(point).FirstOrDefault(o => o is Piece) is not Piece clickedPiece)
                 {
-                    Debug.Log("No piece found at " + point.ToDebugString());
                     return this;
                 }
 
-                // 敵の駒を押したときは何もしない
-                if (obj.Side != _Manager.Turn.TurnPlayer)
+                if (clickedPiece.Side != _Manager.Turn.TurnPlayer)
                 {
-                    Debug.Log("SelectState OnClick triggered at " + point.ToDebugString());
                     _Manager._MessageText.text = "It's not yours";
                     return this;
                 }
 
-                _Manager.SelectedPiece = obj;
-
+                _Manager.SelectedPiece = clickedPiece;
                 _Manager._MessageText.text = "Select a square or piece";
 
                 return new MoveState(_Manager);

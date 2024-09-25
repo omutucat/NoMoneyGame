@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NoMoney.Assets.Scripts.Game.GameManager;
+using NoMoney.Assets.Scripts.Game.Objects;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 
 namespace NoMoney.Assets.Scripts.Game.Board
@@ -56,7 +57,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public List<BoardObject> GetObjectsAt(Point point) =>
+        public List<BoardObject> GetObjectsAt(BoardPoint point) =>
             Objects.Where(o => o.Position.Equals(point)).ToList();
 
 
@@ -73,14 +74,14 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// </summary>
         /// <param name="piece"></param>
         /// <returns></returns>
-        private List<Point> GetMovablePointsTeleportable(Piece piece)
+        private List<BoardPoint> GetMovablePointsTeleportable(Piece piece)
         {
             // ITeleportableは盤面の端を超えると逆の端に移動出来る
             var points = piece.GetMovablePoints(this).Select(p =>
             {
                 var x = (p.X + Size.Width) % Size.Width;
                 var y = (p.Y + Size.Height) % Size.Height;
-                return new Point(x, y);
+                return new BoardPoint(x, y);
             }).ToList();
 
             return points;
@@ -112,14 +113,14 @@ namespace NoMoney.Assets.Scripts.Game.Board
             };
         }
 
-        public bool TryMovePiece(Piece piece, Point point) => piece.TryMove(point, this);
+        public bool TryMovePiece(Piece piece, BoardPoint point) => piece.TryMove(point, this);
 
         /// <summary>
         /// 指定した座標が盤面の範囲外かを返す
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public bool IsPositionOutsideBounds(Point point) =>
+        public bool IsPositionOutsideBounds(BoardPoint point) =>
             point.X < 0 || point.X >= Size.Width || point.Y < 0 || point.Y >= Size.Height;
 
     }

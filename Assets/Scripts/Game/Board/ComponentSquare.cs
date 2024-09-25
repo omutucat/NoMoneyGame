@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NoMoney.Assets.Scripts.Game.Objects;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
 {
     public class ComponentSquare : MonoBehaviour
     {
-        private Point Position { get; set; }
+        private BoardPoint Position { get; set; }
         private float SquareWidth { get; set; }
         private float SquareHeight { get; set; }
         private RectTransform MyTransform { get; set; }
@@ -24,7 +25,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
             PositionUpdate();
         }
 
-        public void Initialize(Point position, float squareWidth, float squareHeight)
+        public void Initialize(BoardPoint position, float squareWidth, float squareHeight)
         {
             if (IsInitialized)
             {
