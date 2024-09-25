@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 9163661086326205557}
   - component: {fileID: 4265272241278967563}
   - component: {fileID: 7649338930774575247}
-  - component: {fileID: -5824668749223813942}
+  - component: {fileID: 3369291025031574723}
   m_Layer: 5
   m_Name: BoardSquare
   m_TagString: Untagged
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &-5824668749223813942
+--- !u!114 &3369291025031574723
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -403,6 +403,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4404042596884565883}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99acfe6ae8207924aacf077cb7d7e693, type: 3}
+  m_Script: {fileID: 11500000, guid: 99b6e0250ea27554b8be5ab155eabb72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

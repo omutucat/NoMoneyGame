@@ -1536,11 +1536,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1310063000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c2a2d9dcb5905a4e89c0c785f62e9b3, type: 3}
+  m_Script: {fileID: 11500000, guid: a22c3aea3b6bc864f8e8955b7f3da74d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _BoardWidth: 8
-  _BoardHeight: 8
+  _BoardWidth: 9
+  _BoardHeight: 9
 --- !u!1 &1394077696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1642,12 +1642,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1515035850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b76d707ed894d039e8b1726f097aac6, type: 3}
+  m_Script: {fileID: 11500000, guid: e349e037c56e9d24b8cf9a25ede49c37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _BoardPanel: {fileID: 1310063004}
-  _MessageText: {fileID: 549727377}
-  _TurnComponent: {fileID: 265887857}
+  _BoardPanel: {fileID: 0}
+  _MessageText: {fileID: 0}
+  _TurnComponent: {fileID: 0}
 --- !u!4 &1515035852
 Transform:
   m_ObjectHideFlags: 0
