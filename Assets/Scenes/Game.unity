@@ -246,7 +246,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 265887855}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a42777bf41d2fd241abcccea1b3968f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 4da46a84946013849b009aa55b2dd6cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _TurnCountText: {fileID: 815756844}
@@ -1108,7 +1108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.09803922, g: 0.8980392, b: 0.8392157, a: 1}
+  m_Color: {r: 0.9150943, g: 0.19424175, b: 0.86771536, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1645,9 +1645,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e349e037c56e9d24b8cf9a25ede49c37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _BoardPanel: {fileID: 0}
-  _MessageText: {fileID: 0}
-  _TurnComponent: {fileID: 0}
+  _BoardPanel: {fileID: 1310063004}
+  _MessageText: {fileID: 549727377}
+  _TurnComponent: {fileID: 265887857}
 --- !u!4 &1515035852
 Transform:
   m_ObjectHideFlags: 0
