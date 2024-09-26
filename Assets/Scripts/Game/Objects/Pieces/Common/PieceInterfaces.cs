@@ -1,13 +1,10 @@
 using System.Collections.Generic;
+using NoMoney.Assets.Scripts.Game.Board;
 
 namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {
-    public interface IAbnormalShape
+    public interface IExtraMove
     {
-        public List<BoardPoint> ExtraPositions { get; }
-    }
-
-    public interface IUnbreakable
-    {
+        List<BoardPoint> GetSpecificReachablePoint(BoardModel board);
     }
 }

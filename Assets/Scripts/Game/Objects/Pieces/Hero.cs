@@ -9,9 +9,8 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
     /// 5ターン目まで動けない
     /// 盤面の左右端に到達すると、反対側の端にワープする
     /// </summary>
-    public class Hero : Piece
+    public class Hero : Piece, IExtraMove
     {
-        private int _TurnCount = 0;
         private const int IMMOBILE_TURNS = 5;
 
         public Hero(BoardPoint position, PieceSide side, IEnumerable<PieceStatus> statusList = null)
@@ -31,14 +30,12 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
                 new(-1, -1),
             };
 
-        protected override List<BoardPoint> JudgeMovablePoints(List<BoardPoint> reachablePoints, BoardModel board) =>
-            //TODO : このタイプの移動、もっといい感じに共通化したい
-            reachablePoints.Select(p =>
+        public List<BoardPoint> GetSpecificReachablePoint(BoardModel board) =>
+            MoveRange.Select(p => Direction switch
                 {
-                    var x = (p.X + board.Size.Width) % board.Size.Width;
-                    var y = p.Y;
-                    return new BoardPoint(x, y);
-                }
-            ).ToList();
+                    PieceDirection.Up => new BoardPoint((Position.X + p.X + board.Size.Width) % board.Size.Width, Position.Y + p.Y),
+                    PieceDirection.Down => new BoardPoint((Position.X - p.X + board.Size.Width) % board.Size.Width, Position.Y - p.Y),
+                    _ => throw new System.NotImplementedException()
+                }).Where(p => board.IsInsidePoint(p)).ToList();
     }
 }

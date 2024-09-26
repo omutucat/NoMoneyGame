@@ -42,7 +42,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         public bool IsValidBoard()
         {
             // 不正な座標に存在するオブジェクトがあるか
-            var isExistIllegalPosition = Objects.Any(o => IsPositionOutsideBounds(o.Position));
+            var isExistIllegalPosition = Objects.Any(o => !IsInsidePoint(o.Position));
 
             // 重なっているオブジェクトがあるか
             // NOTE: Pointは構造体なので同値性比較ができる
@@ -60,6 +60,14 @@ namespace NoMoney.Assets.Scripts.Game.Board
         public List<BoardObject> GetObjectsAt(BoardPoint point) =>
             Objects.Where(o => o.Position.Equals(point)).ToList();
 
+        /// <summary>
+        /// 指定した座標に存在する駒を返す
+        /// 存在しない場合はnullを返す
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Piece? FindPieceAt(BoardPoint point) =>
+            GetObjectsAt(point).FirstOrDefault(o => o is Piece) as Piece;
 
         /// <summary>
         /// 各こまのターンエンド処理をする
@@ -113,16 +121,13 @@ namespace NoMoney.Assets.Scripts.Game.Board
             };
         }
 
-        public bool TryMovePiece(Piece piece, BoardPoint point) => piece.TryMove(point, this);
-
         /// <summary>
-        /// 指定した座標が盤面の範囲外かを返す
+        /// 指定した座標が盤面の範囲内かを返す
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public bool IsPositionOutsideBounds(BoardPoint point) =>
-            point.X < 0 || point.X >= Size.Width || point.Y < 0 || point.Y >= Size.Height;
-
+        public bool IsInsidePoint(BoardPoint point) =>
+            point.X >= 0 || point.X < Size.Width || point.Y >= 0 || point.Y < Size.Height;
     }
 
     public class BoardSize

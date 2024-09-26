@@ -22,8 +22,7 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
             {
                 Debug.Log("MoveState OnClick triggered at " + point.ToDebugString());
 
-                // TODO: この形の書き方結構見かけるので、どこかで関数化する
-                var clickedPiece = _Manager.Board.GetObjectsAt(point).FirstOrDefault(o => o is Piece) as Piece;
+                var clickedPiece = _Manager.Board.FindPieceAt(point);
 
                 if (clickedPiece is not null && clickedPiece.Side == _Manager.Turn.TurnPlayer)
                 {

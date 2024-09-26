@@ -1,4 +1,4 @@
-﻿using System;
+﻿using NoMoney.Assets.Scripts.Game.Board;
 
 namespace NoMoney.Assets.Scripts.Game.Objects
 {
@@ -24,6 +24,17 @@ namespace NoMoney.Assets.Scripts.Game.Objects
         public BoardPoint Position { get; protected set; }
 
         protected BoardObject(BoardPoint position) => Position = position;
+
+        public virtual bool IsUntouchable => this is IUntouchable;
+
+        public void OnCollided(BoardModel board, BoardObject other)
+        {
+            Destroy();
+
+            OnCollidedHook(board, other);
+        }
+
+        protected virtual void OnCollidedHook(BoardModel board, BoardObject other) { }
 
         /// <summary>
         /// 破壊される時に呼び出すメソッド

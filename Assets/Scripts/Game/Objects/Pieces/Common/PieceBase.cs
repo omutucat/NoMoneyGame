@@ -76,11 +76,9 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 
             var objects = board.GetObjectsAt(point);
 
-            // TODO: 攻撃時や被攻撃時の処理をより抽象化したい
-            // Unbreakableなオブジェクトをここで判定するのではなく、相手の駒の判定関数を使用できるようにしたり
             var canMove = objects switch
             {
-                { } o when o.Any(o => o is IUnbreakable) => false,
+                { } o when o.Any(o => o.IsUntouchable) => false,
                 { } o when o.Any(o => o is Piece p && p.Side == Side) => false,
                 _ => true
             };
@@ -90,21 +88,17 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
                 return false;
             }
 
-            objects.ForEach(o => o.Destroy());
+            objects.ForEach(o => o.OnCollided(board, this));
             Position = point;
             return true;
         }
 
-        /// <summary>
-        /// 指定したピースが移動可能な座標を返す
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <returns></returns>
-        public List<BoardPoint> GetMovablePoints(BoardModel board) => StatusList switch
+        public List<BoardPoint> GetMovablePoints(BoardModel board) => this switch
         {
-            // TODO: 移動不可の判定をここではなく、ステータス側で行うようにしたい
-            { } s when s.Any(s => s is InSleep or Immobilized) => new List<BoardPoint>(),
-            _ => JudgeMovablePoints(GetReachablePoints(), board),
+            { } p when p.StatusList.Any(s => s is IMoveEffect) =>
+                (p.StatusList.First(s => s is IMoveEffect) as IMoveEffect).GetAffectedReachablePoint(p, board),
+            IExtraMove p => p.GetSpecificReachablePoint(board),
+            _ => GetDefaultReachablePoints(board)
         };
 
         /// <summary>
@@ -112,40 +106,33 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         /// </summary>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        private List<BoardPoint> GetReachablePoints() => Direction switch
-        {
-            PieceDirection.Up => MoveRange.Select(p => new BoardPoint(Position.X + p.X, Position.Y + p.Y)).ToList(),
-            PieceDirection.Down => MoveRange.Select(p => new BoardPoint(Position.X - p.X, Position.Y - p.Y)).ToList(),
-            _ => throw new System.NotImplementedException()
-        };
+        public List<BoardPoint> GetDefaultReachablePoints(BoardModel board) =>
+            MoveRange.Select(p => Direction switch
+                {
+                    PieceDirection.Up => new BoardPoint(Position.X + p.X, Position.Y + p.Y),
+                    PieceDirection.Down => new BoardPoint(Position.X - p.X, Position.Y - p.Y),
+                    _ => throw new System.NotImplementedException()
+                }
+            ).Where(p => board.IsInsidePoint(p)).ToList();
+
+        public override bool IsUntouchable => false || StatusList.Any(s => s is Untouchable) || this is IUntouchable;
 
         /// <summary>
         /// ターンが変わった時の処理
         /// </summary>
         public void OnTurnChanged()
         {
-            StatusList.Where(s => s is ITurnChangeListener).Cast<ITurnChangeListener>().ToList().ForEach(s => s.OnTurnEnd());
+            StatusList.Where(s => s is ITurnChangeEffect).Cast<ITurnChangeEffect>().ToList().ForEach(s => s.OnTurnEnd());
 
             // NOTE: hookを派生クラスでオーバーライドすることで追加の処理を実行可能
             OnTurnChangedHook();
         }
 
         /// <summary>
-        /// 実際にその座標に移動可能か判定する
-        /// 派生クラスでオーバーライドすることで特殊な移動を実装可能
-        /// </summary>
-        /// <param name="reachablePoints"></param>
-        /// <param name="board"></param>
-        /// <returns></returns>
-        protected virtual List<BoardPoint> JudgeMovablePoints(List<BoardPoint> reachablePoints, BoardModel board) =>
-            reachablePoints.Where(p => !board.IsPositionOutsideBounds(p)).ToList();
-
-        /// <summary>
         /// ターンが変わった時に追加で実行される処理
         /// 派生クラスでオーバーライドすることで特殊な処理を実装可能
         /// </summary>
-        public virtual void OnTurnChangedHook() { }
-
+        protected virtual void OnTurnChangedHook() { }
     }
 
     /// <summary>

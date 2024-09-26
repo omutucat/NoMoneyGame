@@ -1,4 +1,7 @@
-﻿namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
+﻿using System.Collections.Generic;
+using NoMoney.Assets.Scripts.Game.Board;
+
+namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 {
     public abstract class PieceStatus
     {
@@ -13,15 +16,15 @@
     /// <summary>
     /// 移動不可状態
     /// </summary>
-    public class Immobilized : PieceStatus
+    public class Immobilized : PieceStatus, IMoveEffect
     {
-        // TODO: もっとうまい方法で移動不可状態を表現したいね
+        public List<BoardPoint> GetAffectedReachablePoint(Piece piece, BoardModel board) => new();
     }
 
     /// <summary>
     /// 眠り状態
     /// </summary>
-    public class InSleep : PieceStatus, ITurnChangeListener
+    public class InSleep : PieceStatus, ITurnChangeEffect, IMoveEffect
     {
         /// <summary>
         /// 残りターン数
@@ -43,13 +46,23 @@
         }
 
         public void OnTurnEnd() => DecreaseTurnCount();
+        public List<BoardPoint> GetAffectedReachablePoint(Piece piece, BoardModel board) => new();
+    }
+
+    public class Untouchable : PieceStatus
+    {
+    }
+
+    public interface IMoveEffect
+    {
+        List<BoardPoint> GetAffectedReachablePoint(Piece piece, BoardModel board);
     }
 
     /// <summary>
     /// ターン変更時の処理を受け取るインターフェース
     /// ターン変更時に効果を発揮するステータスはこのインターフェースを実装する
     /// </summary>
-    public interface ITurnChangeListener
+    public interface ITurnChangeEffect
     {
         void OnTurnEnd();
     }
