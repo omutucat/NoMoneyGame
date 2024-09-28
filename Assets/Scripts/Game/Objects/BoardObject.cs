@@ -25,20 +25,8 @@ namespace NoMoney.Assets.Scripts.Game.Objects
 
         protected BoardObject(BoardPoint position) => Position = position;
 
-        public virtual bool IsUntouchable => this is IUntouchable;
-
-        public void OnCollided(BoardModel board, BoardObject other)
-        {
-            Destroy();
-
-            OnCollidedHook(board, other);
-        }
-
-        protected virtual void OnCollidedHook(BoardModel board, BoardObject other) { }
-
         /// <summary>
-        /// 破壊される時に呼び出すメソッド
-        /// OnDestroyイベントを発火する
+        /// このオブジェクトを破壊する
         /// </summary>
         public virtual void Destroy() => OnDestroy?.Invoke(this);
     }

@@ -7,7 +7,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
     /// <summary>
     /// 駒
     /// </summary>
-    public abstract class Piece : BoardObject
+    public abstract class Piece : BoardObject, IAttackTarget
     {
         /// <summary>
         /// 向き
@@ -29,6 +29,10 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         /// 状態(バフ・デバフなど)のリスト
         /// </summary>
         public List<PieceStatus> StatusList { get; private set; }
+
+        public bool IsTouchable =>
+            // NOTE: Untouchableになることはあるが、Untouchableでなくなる事はないとする。
+            true && !StatusList.Any(s => s is Untouchable) && this is not IUntouchable;
 
         protected Piece(BoardPoint position, PieceSide side, IEnumerable<PieceStatus>? statusList = null) : base(position)
         {
@@ -66,34 +70,40 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         /// <param name="point"></param>
         /// <param name="board"></param>
         /// <returns></returns>
-        public virtual bool TryMove(BoardPoint point, BoardModel board)
+        public bool TryMove(BoardPoint point, BoardModel board)
         {
             // TODO: 移動結果を単なるBool型でなくクラス化し、色んな情報を返せるようにしたい
-            if (!GetMovablePoints(board).Contains(point))
+            if (!GetReachablePoints(board).Contains(point))
             {
                 return false;
             }
 
-            var objects = board.GetObjectsAt(point);
+            var attackTarget = board.GetObjectsAt(point).FirstOrDefault(o => o is IAttackTarget) as IAttackTarget;
 
-            var canMove = objects switch
+            switch (attackTarget)
             {
-                { } o when o.Any(o => o.IsUntouchable) => false,
-                { } o when o.Any(o => o is Piece p && p.Side == Side) => false,
-                _ => true
-            };
-
-            if (!canMove)
-            {
-                return false;
+                case null:
+                    Position = point;
+                    return true;
+                case { } when CanAttackTo(attackTarget):
+                    AttackTo(board, attackTarget);
+                    Position = point;
+                    return true;
+                default:
+                    return false;
             }
-
-            objects.ForEach(o => o.OnCollided(board, this));
-            Position = point;
-            return true;
         }
 
-        public List<BoardPoint> GetMovablePoints(BoardModel board) => this switch
+        protected virtual bool CanAttackTo(IAttackTarget target) => target.IsTouchable;
+
+        protected virtual void AttackTo(BoardModel board, IAttackTarget target) => target.OnAttacked(board, this);
+
+        /// <summary>
+        /// 到達可能な座標を取得する
+        /// </summary>
+        /// <param name="board"></param>
+        /// <returns></returns>
+        public List<BoardPoint> GetReachablePoints(BoardModel board) => this switch
         {
             { } p when p.StatusList.Any(s => s is IMoveEffect) =>
                 (p.StatusList.First(s => s is IMoveEffect) as IMoveEffect).GetAffectedReachablePoint(p, board),
@@ -102,7 +112,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         };
 
         /// <summary>
-        /// 方向を加味して移動可能な座標を計算する
+        /// 向きや盤面の境界を考慮した移動可能な座標を取得する
         /// </summary>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
@@ -114,8 +124,6 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
                     _ => throw new System.NotImplementedException()
                 }
             ).Where(p => board.IsInsidePoint(p)).ToList();
-
-        public override bool IsUntouchable => false || StatusList.Any(s => s is Untouchable) || this is IUntouchable;
 
         /// <summary>
         /// ターンが変わった時の処理
@@ -133,6 +141,15 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         /// 派生クラスでオーバーライドすることで特殊な処理を実装可能
         /// </summary>
         protected virtual void OnTurnChangedHook() { }
+
+        public void OnAttacked(BoardModel board, Piece attacker)
+        {
+            // NOTE: 攻撃されると少なくとも必ず破壊され、追加処理としてHookを呼び出す
+            Destroy();
+            OnAttackedHook(board, attacker);
+        }
+
+        protected virtual void OnAttackedHook(BoardModel board, BoardObject other) { }
     }
 
     /// <summary>

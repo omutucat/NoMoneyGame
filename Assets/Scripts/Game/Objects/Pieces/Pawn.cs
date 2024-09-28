@@ -12,7 +12,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         }
 
         protected override List<BoardPoint> MoveRange => new()
-        //前三方向に進める
+        // 前三方向に進める
         {
             new(0, -1),
             new(-1, -1),

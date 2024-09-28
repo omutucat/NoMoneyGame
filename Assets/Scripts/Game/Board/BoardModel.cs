@@ -19,46 +19,50 @@ namespace NoMoney.Assets.Scripts.Game.Board
     /// </summary>
     public class BoardModel
     {
-        public List<BoardObject> Objects { get; }
+        public List<BoardObject> Objects { get; } = new();
         public BoardSize Size { get; }
+        public IEnumerable<Piece> Pieces => Objects.Where(o => o is Piece).Cast<Piece>();
 
         public BoardModel(BoardSize size, List<BoardObject> objects)
         {
             Size = size;
-            Objects = objects;
-
-            if (!IsValidBoard())
-            {
-                throw new System.ArgumentException("Invalid board");
-            }
-
-            Objects.Where(o => o is Piece).Cast<Piece>().ToList().ForEach(p => p.OnDestroy += OnDestroyPiece);
+            objects.ForEach(o => AddObject(o));
         }
 
         /// <summary>
-        /// ボードが正当かチェックする。オブジェクトが重なっていないか、座標が範囲内かを確認する
+        /// オブジェクトを追加する
         /// </summary>
-        /// <returns></returns>
-        public bool IsValidBoard()
+        /// <param name="obj"></param>
+        /// <exception cref="System.ArgumentException"></exception>
+        public void AddObject(BoardObject obj)
         {
-            // 不正な座標に存在するオブジェクトがあるか
-            var isExistIllegalPosition = Objects.Any(o => !IsInsidePoint(o.Position));
+            if (!IsInsidePoint(obj.Position))
+            {
+                throw new System.ArgumentException("Invalid position");
+            }
 
-            // 重なっているオブジェクトがあるか
-            // NOTE: Pointは構造体なので同値性比較ができる
-            var isExistOverlapping = Objects.GroupBy(o => o.Position).Any(g => g.Count() > 1);
+            if (Objects.Any(o => o.Position.Equals(obj.Position)))
+            {
+                throw new System.ArgumentException("Object already exists");
+            }
 
-            return !isExistIllegalPosition && !isExistOverlapping;
+            Objects.Add(obj);
+            obj.OnDestroy += OnDestroyObj;
         }
-        public void OnDestroyPiece(BoardObject sender) => Objects.Remove(sender);
+
+        /// <summary>
+        /// オブジェクトの削除時に呼ばれる処理
+        /// </summary>
+        /// <param name="sender"></param>
+        public void OnDestroyObj(BoardObject sender) => Objects.Remove(sender);
 
         /// <summary>
         /// 指定した座標に存在するオブジェクトを全て返す
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public List<BoardObject> GetObjectsAt(BoardPoint point) =>
-            Objects.Where(o => o.Position.Equals(point)).ToList();
+        public IEnumerable<BoardObject> GetObjectsAt(BoardPoint point) =>
+            Objects.Where(o => o.Position == point);
 
         /// <summary>
         /// 指定した座標に存在する駒を返す
@@ -73,27 +77,8 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// 各こまのターンエンド処理をする
         /// </summary>
         public void OnTurnChanged(Turn turn) =>
-            // 指定したサイドの駒のターンエンド処理をする
             Objects.Where(o => o is Piece piece && piece.Side == turn.TurnPlayer).Cast<Piece>().ToList()
                 .ForEach(p => p.OnTurnChanged());
-
-        /// <summary>
-        /// テレポート可能な駒の移動可能な座標を返す
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <returns></returns>
-        private List<BoardPoint> GetMovablePointsTeleportable(Piece piece)
-        {
-            // ITeleportableは盤面の端を超えると逆の端に移動出来る
-            var points = piece.GetMovablePoints(this).Select(p =>
-            {
-                var x = (p.X + Size.Width) % Size.Width;
-                var y = (p.Y + Size.Height) % Size.Height;
-                return new BoardPoint(x, y);
-            }).ToList();
-
-            return points;
-        }
 
         /// <summary>
         /// ゲームの状態を判定する
@@ -101,22 +86,20 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// <returns></returns>
         public GameStatus JudgeGameState()
         {
-            var pieces = Objects.Where(o => o is Piece).Cast<Piece>().ToList();
-
             // プレイヤーの駒が上端に到達すれば勝利
-            bool isWin(List<Piece> pieces) => pieces.Any(piece => piece.Side == PieceSide.Player && piece.Position.Y == 0);
+            var isWin = Pieces.Any(piece => piece.Side == PieceSide.Player && piece.Position.Y == 0);
 
             // 敵の駒が下端に到達すれば敗北
-            bool isLose(List<Piece> pieces) => pieces.Any(piece => piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1);
+            var isLose = Pieces.Any(piece => piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1);
 
             // 駒が全て消えれば引き分け
-            bool isDraw(List<Piece> pieces) => pieces.Count == 0;
+            var isDraw = Pieces.Count() == 0;
 
-            return pieces switch
+            return Pieces switch
             {
-                { } when isWin(pieces) => GameStatus.Win,
-                { } when isLose(pieces) => GameStatus.Lose,
-                { } when isDraw(pieces) => GameStatus.Draw,
+                { } when isWin => GameStatus.Win,
+                { } when isLose => GameStatus.Lose,
+                { } when isDraw => GameStatus.Draw,
                 _ => GameStatus.Playing
             };
         }

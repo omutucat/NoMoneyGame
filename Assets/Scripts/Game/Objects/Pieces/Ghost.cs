@@ -30,35 +30,17 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             new(0, -2)
         };
 
-        public override bool TryMove(BoardPoint point, BoardModel board)
+        protected override bool CanAttackTo(IAttackTarget target) =>
+            // NOTE: 駒ならUntouchableでも攻撃できるが、駒以外のオブジェクトには攻撃できない
+            target is Piece;
+
+        protected override void AttackTo(BoardModel board, IAttackTarget target)
         {
-            if (!GetMovablePoints(board).Contains(point))
+            if (target is Piece piece)
             {
-                return false;
+                piece.AddStatus(new Immobilized());
+                Destroy();
             }
-
-            var objectsInPoint = board.GetObjectsAt(point);
-
-            switch (objectsInPoint)
-            {
-                case { } when objectsInPoint.Count == 0:
-                    Position = point;
-                    break;
-                case { } when objectsInPoint.Any(o => o is Piece piece && piece.Side != Side):
-                    objectsInPoint.ForEach(o =>
-                    {
-                        if (o is Piece piece)
-                        {
-                            piece.StatusList.Add(new Immobilized());
-                        }
-                    });
-                    Destroy();
-                    break;
-                default:
-                    return false;
-            }
-
-            return true;
         }
     }
 }

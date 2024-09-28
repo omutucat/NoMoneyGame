@@ -55,6 +55,12 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 
     public interface IMoveEffect
     {
+        /// <summary>
+        /// 効果適用後の移動可能な座標を返す
+        /// </summary>
+        /// <param name="piece"></param>
+        /// <param name="board"></param>
+        /// <returns></returns>
         List<BoardPoint> GetAffectedReachablePoint(Piece piece, BoardModel board);
     }
 

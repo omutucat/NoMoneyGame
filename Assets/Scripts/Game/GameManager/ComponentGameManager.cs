@@ -51,7 +51,7 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
             {
                 // 駒が選択された時に移動可能なマスを更新
                 _SelectedPiece = value;
-                MovablePoints = value is null ? new List<BoardPoint>() : value.GetMovablePoints(Board);
+                MovablePoints = value is null ? new List<BoardPoint>() : value.GetReachablePoints(Board);
             }
         }
 

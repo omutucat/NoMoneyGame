@@ -26,6 +26,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
             // 敵か味方かに応じて色を変更
+            // TODO: 色を固定値でなくどこかに定義する
             if (_Piece.Side == PieceSide.Enemy)
             {
                 image.color = new Color(1, 0, 0, 1);
