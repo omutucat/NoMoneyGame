@@ -8,15 +8,6 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
     /// </summary>
     public class Troll : Piece, IAbnormalShape
     {
-        private static readonly List<BoardPoint> POSITIONS = new()
-        {
-            // NOTE: サイズが2*2で、左上を始点として(+1,0),(+1,+1),(0,+1)の3つのマスを占有する
-            new(0, 0),
-            new(1, 0),
-            new(1, 1),
-            new(0, 1)
-        };
-
         public Troll(BoardPoint position, PieceSide side, IEnumerable<PieceStatus> statusList = null) : base(position, side, statusList)
         {
         }
@@ -30,6 +21,13 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             new(1, 0)
         };
 
-        public List<BoardPoint> ExtraPositions => POSITIONS;
+        public List<BoardPoint> ExtraPositions => new()
+        {
+            // NOTE: サイズが2*2で、左上を始点として(+1,0),(+1,+1),(0,+1)の3つのマスを占有する
+            new(0, 0),
+            new(1, 0),
+            new(1, 1),
+            new(0, 1)
+        };
     }
 }

@@ -19,7 +19,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
     /// </summary>
     public class ComponentBoardPanel : MonoBehaviour
     {
-        [SerializeField] private List<IBoardEventListener> _BoardEventListeners;
+        private List<IBoardEventListener> _BoardEventListeners = new();
         private GameObject _PiecePrefab;
         private GameObject _BoardSquarePrefab;
 
@@ -29,11 +29,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
 
         private List<SquareObject> _SquareObjects = new();
 
-        private void Awake()
-        {
-            _PiecePrefab = Resources.Load<GameObject>("Prefabs/Piece");
-            _BoardSquarePrefab = Resources.Load<GameObject>("Prefabs/BoardSquare");
-        }
+        private void Awake() => _BoardSquarePrefab = Resources.Load<GameObject>("Prefabs/BoardSquare");
 
         /// <summary>
         /// 盤面の初期化処理
@@ -41,7 +37,6 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// <param name="board"></param>
         public void Initialize(BoardModel board)
         {
-            _BoardEventListeners = new List<IBoardEventListener>();
             // 盤面の初期化処理
             // 自身のWidthとHeightを取得
             var myRectTransform = GetComponent<RectTransform>();
@@ -73,25 +68,12 @@ namespace NoMoney.Assets.Scripts.Game.Board
                 switch (obj)
                 {
                     case Piece piece:
-                        CreatePieceObject(piece, squareWidth, squareHeight);
+                        ComponentPiece.Create(piece, squareWidth, squareHeight, transform);
                         break;
                     default:
                         break;
                 }
             }
-        }
-
-        /// <summary>
-        /// 駒を生成する
-        /// </summary>
-        /// <param name="piece"></param>
-        /// <param name="squareWidth"></param>
-        /// <param name="squareHeight"></param>
-        private void CreatePieceObject(Piece piece, float squareWidth, float squareHeight)
-        {
-            var pieceObject = Instantiate(_PiecePrefab, transform, false);
-            var component = pieceObject.GetComponent<ComponentPiece>();
-            component.Initialize(piece, squareWidth, squareHeight);
         }
 
         /// <summary>
