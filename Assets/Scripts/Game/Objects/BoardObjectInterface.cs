@@ -1,5 +1,5 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using NoMoney.Assets.Scripts.Game.Board;
 using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 
@@ -22,10 +22,28 @@ namespace NoMoney.Assets.Scripts.Game.Objects
             }
         }
 
+        public BoardPoint Position { get; }
+
         /// <summary>
-        /// 追加の位置情報
+        /// 追加の形状情報
         /// </summary>
-        public List<BoardPoint> ExtraPositions { get; }
+        public List<BoardPoint> ExtraShapePoints { get; }
+
+        /// <summary>
+        /// 追加の形状に伴う位置情報
+        /// </summary>
+        public List<BoardPoint> ExtraPositions
+        {
+            get
+            {
+                var positions = new List<BoardPoint>();
+                foreach (var p in ExtraShapePoints)
+                {
+                    positions.Add(new BoardPoint(Position.X + p.X, Position.Y + p.Y));
+                }
+                return positions;
+            }
+        }
 
         /// <summary>
         /// オブジェクトのサイズ倍率
@@ -35,9 +53,9 @@ namespace NoMoney.Assets.Scripts.Game.Objects
         {
             get
             {
-                // ExtraPositionsの中から最大のXとYを取得
-                var maxX = ExtraPositions.Max(p => p.X);
-                var maxY = ExtraPositions.Max(p => p.Y);
+                // 追加の形状点の中から最大のXとYを取得
+                var maxX = ExtraShapePoints.Max(p => p.X);
+                var maxY = ExtraShapePoints.Max(p => p.Y);
                 return new SizeScale(maxX + 1, maxY + 1);
             }
         }

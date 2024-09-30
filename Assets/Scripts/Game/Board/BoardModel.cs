@@ -36,6 +36,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// <exception cref="System.ArgumentException"></exception>
         public void AddObject(BoardObject obj)
         {
+            // TODO: 異形オブジェクトの場合の処理を追加する
             if (!IsInsidePoint(obj.Position))
             {
                 throw new System.ArgumentException("Invalid position");
@@ -62,7 +63,11 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// <param name="point"></param>
         /// <returns></returns>
         public IEnumerable<BoardObject> GetObjectsAt(BoardPoint point) =>
-            Objects.Where(o => o.Position == point);
+            Objects.Where(obj => obj switch
+            {
+                IAbnormalShape bigObj => bigObj.ExtraPositions.Contains(point) || bigObj.Position == point,
+                _ => obj.Position == point
+            });
 
         /// <summary>
         /// 指定した座標に存在する駒を返す
