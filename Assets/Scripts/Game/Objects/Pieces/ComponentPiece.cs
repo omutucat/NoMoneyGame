@@ -8,7 +8,6 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
     /// </summary>
     public class ComponentPiece : MonoBehaviour
     {
-        private static GameObject PREFAB = Resources.Load<GameObject>("Prefabs/Piece");
         private Piece Piece { get; set; }
         private float SquareWidth { get; set; }
         private float SquareHeight { get; set; }
@@ -18,7 +17,6 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         private bool _IsInitialized = false;
 
         private void Awake() => _MyTransform = GetComponent<RectTransform>();
-
         private void Start()
         {
             // ピースのサイズを設定
@@ -81,7 +79,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 
         public static void Create(Piece piece, float squareWidth, float squareHeight, Transform parent)
         {
-            var pieceObject = Instantiate(PREFAB, parent, false);
+            var pieceObject = Instantiate(SystemManager.PiecePrefab, parent, false);
             var component = pieceObject.GetComponent<ComponentPiece>();
             component.Initialize(piece, squareWidth, squareHeight);
         }
