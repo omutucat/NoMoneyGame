@@ -8,7 +8,9 @@ namespace NoMoney.Assets.Scripts.UnityUtil
     /// </summary>
     public class SceneMove : MonoBehaviour
     {
-        [SerializeField] private string _SceneName;
+        [SerializeField]
+        private string _SceneName;
+
         public void MoveScene() => SceneManager.LoadScene(_SceneName ?? "SampleScene");
     }
 }

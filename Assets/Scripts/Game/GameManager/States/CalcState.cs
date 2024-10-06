@@ -19,7 +19,9 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
             {
                 switch (_Manager.Board.JudgeGameState())
                 {
-                    case GameStatus.Win or GameStatus.Lose or GameStatus.Draw:
+                    case GameStatus.Win
+                    or GameStatus.Lose
+                    or GameStatus.Draw:
                         return new EndState(_Manager);
                     case GameStatus.Playing:
                         _Manager.Turn.ToNextPlayer();
@@ -31,6 +33,5 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
 
             public IGameState OnClick(BoardPoint point) => this;
         }
-
     }
 }

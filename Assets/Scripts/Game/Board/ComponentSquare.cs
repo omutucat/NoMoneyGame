@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NoMoney.Assets.Scripts.Game.Objects;
-using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 using UnityEngine;
 
 namespace NoMoney.Assets.Scripts.Game.Board
@@ -66,6 +65,6 @@ namespace NoMoney.Assets.Scripts.Game.Board
     {
         Normal = -1,
         Selected = 0,
-        Movable = 1
+        Movable = 1,
     }
 }

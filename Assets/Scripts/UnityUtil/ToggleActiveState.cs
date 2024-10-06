@@ -7,8 +7,9 @@ namespace NoMoney.Assets.Scripts.UnityUtil
     /// </summary>
     public class ToggleActiveState : MonoBehaviour
     {
-        [SerializeField] private GameObject _TargetObject;
+        [SerializeField]
+        private GameObject _TargetObject;
+
         public void ToggleActive() => _TargetObject.SetActive(!_TargetObject.activeSelf);
     }
-
 }

@@ -31,11 +31,22 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             };
 
         public List<BoardPoint> GetSpecificReachablePoint(BoardModel board) =>
-            MoveRange.Select(p => Direction switch
-                {
-                    PieceDirection.Up => new BoardPoint((Position.X + p.X + board.Size.Width) % board.Size.Width, Position.Y + p.Y),
-                    PieceDirection.Down => new BoardPoint((Position.X - p.X + board.Size.Width) % board.Size.Width, Position.Y - p.Y),
-                    _ => throw new System.NotImplementedException()
-                }).Where(p => board.IsInsidePoint(p)).ToList();
+            MoveRange
+                .Select(p =>
+                    Direction switch
+                    {
+                        PieceDirection.Up => new BoardPoint(
+                            (Position.X + p.X + board.Size.Width) % board.Size.Width,
+                            Position.Y + p.Y
+                        ),
+                        PieceDirection.Down => new BoardPoint(
+                            (Position.X - p.X + board.Size.Width) % board.Size.Width,
+                            Position.Y - p.Y
+                        ),
+                        _ => throw new System.NotImplementedException(),
+                    }
+                )
+                .Where(p => board.IsInsidePoint(p))
+                .ToList();
     }
 }

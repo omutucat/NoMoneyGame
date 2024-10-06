@@ -61,13 +61,10 @@ namespace NoMoney.Assets.Scripts.Game.Objects
         }
     }
 
-
     /// <summary>
     /// 攻撃されないオブジェクトのインターフェース
     /// </summary>
-    public interface IUntouchable
-    {
-    }
+    public interface IUntouchable { }
 
     /// <summary>
     /// 攻撃対象となるオブジェクトのインターフェース

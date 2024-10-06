@@ -24,12 +24,16 @@ namespace NoMoney.Assets.Scripts.Game.Board
         private GameObject _BoardSquarePrefab;
 
         // テスト用に外からサイズを指定できるように
-        [SerializeField] private int _BoardWidth;
-        [SerializeField] private int _BoardHeight;
+        [SerializeField]
+        private int _BoardWidth;
+
+        [SerializeField]
+        private int _BoardHeight;
 
         private List<SquareObject> _SquareObjects = new();
 
-        private void Awake() => _BoardSquarePrefab = Resources.Load<GameObject>("Prefabs/BoardSquare");
+        private void Awake() =>
+            _BoardSquarePrefab = Resources.Load<GameObject>("Prefabs/BoardSquare");
 
         /// <summary>
         /// 盤面の初期化処理

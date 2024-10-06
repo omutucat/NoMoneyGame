@@ -22,8 +22,10 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
             {
                 Debug.Log("SelectState OnClick triggered at " + point.ToDebugString());
 
-
-                if (_Manager.Board.GetObjectsAt(point).FirstOrDefault(o => o is Piece) is not Piece clickedPiece)
+                if (
+                    _Manager.Board.GetObjectsAt(point).FirstOrDefault(o => o is Piece)
+                    is not Piece clickedPiece
+                )
                 {
                     return this;
                 }
@@ -41,5 +43,4 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
             }
         }
     }
-
 }

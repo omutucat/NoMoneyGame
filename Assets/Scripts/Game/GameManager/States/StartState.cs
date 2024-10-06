@@ -22,7 +22,8 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
             {
                 // 前画面で選択されたステージを取得
                 var stageName = SystemManager.SelectedStage;
-                _Manager.Board = StageList.GetStage(stageName) ?? throw new Exception("Stage not found");
+                _Manager.Board =
+                    StageList.GetStage(stageName) ?? throw new Exception("Stage not found");
 
                 // 各コンポーネントの初期化
                 // データの更新に合わせて動作できるようにイベントを登録していく
@@ -30,7 +31,9 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
                 _Manager._BoardPanel.AddListener(_Manager);
 
                 _Manager.Turn = new Turn();
-                _Manager.Turn.OnTurnChanged += turn => _Manager._MessageText.text = turn.TurnPlayer == PieceSide.Player ? "Player's turn" : "Enemy's turn";
+                _Manager.Turn.OnTurnChanged += turn =>
+                    _Manager._MessageText.text =
+                        turn.TurnPlayer == PieceSide.Player ? "Player's turn" : "Enemy's turn";
                 _Manager.Turn.OnTurnChanged += _Manager._TurnComponent.OnTurnChanged;
 
                 // NOTE: 描画を更新するために一回手動でOnTurnChangedを呼ぶ

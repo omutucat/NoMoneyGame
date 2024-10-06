@@ -1,6 +1,4 @@
-﻿using NoMoney.Assets.Scripts.Game.Board;
-
-namespace NoMoney.Assets.Scripts.Game.Objects
+﻿namespace NoMoney.Assets.Scripts.Game.Objects
 {
     /// <summary>
     /// 盤面上のオブジェクト

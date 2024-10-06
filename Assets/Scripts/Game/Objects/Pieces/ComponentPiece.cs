@@ -17,14 +17,18 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         private bool _IsInitialized = false;
 
         private void Awake() => _MyTransform = GetComponent<RectTransform>();
+
         private void Start()
         {
             // ピースのサイズを設定
             // 異形オブジェクトの場合倍率をかける
             (MyWidth, MyHeight) = Piece switch
             {
-                IAbnormalShape ap => (ap.Scale.WidthRatio * SquareWidth, ap.Scale.HeightRatio * SquareHeight),
-                _ => (SquareWidth, SquareHeight)
+                IAbnormalShape ap => (
+                    ap.Scale.WidthRatio * SquareWidth,
+                    ap.Scale.HeightRatio * SquareHeight
+                ),
+                _ => (SquareWidth, SquareHeight),
             };
 
             _MyTransform.sizeDelta = new Vector2(MyWidth, MyHeight);
@@ -32,7 +36,11 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             // テクスチャの設定
             var texture = PieceTextures.PieceTexture(Piece);
             var image = GetComponent<Image>();
-            image.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            image.sprite = Sprite.Create(
+                texture,
+                new Rect(0, 0, texture.width, texture.height),
+                new Vector2(0.5f, 0.5f)
+            );
 
             // 敵か味方かに応じて色を変更
             // TODO: 色を固定値でなくどこかに定義する
@@ -77,7 +85,12 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 
         private void DestroyMyself(BoardObject sender) => Destroy(gameObject);
 
-        public static void Create(Piece piece, float squareWidth, float squareHeight, Transform parent)
+        public static void Create(
+            Piece piece,
+            float squareWidth,
+            float squareHeight,
+            Transform parent
+        )
         {
             var pieceObject = Instantiate(SystemManager.PiecePrefab, parent, false);
             var component = pieceObject.GetComponent<ComponentPiece>();

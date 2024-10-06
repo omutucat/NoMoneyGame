@@ -1,5 +1,3 @@
 using UnityEngine;
 
-public class SampleCode : MonoBehaviour
-{
-}
+public class SampleCode : MonoBehaviour { }

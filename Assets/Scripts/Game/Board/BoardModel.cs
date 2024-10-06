@@ -11,7 +11,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
         Playing,
         Win,
         Lose,
-        Draw
+        Draw,
     }
 
     /// <summary>
@@ -63,11 +63,14 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// <param name="point"></param>
         /// <returns></returns>
         public IEnumerable<BoardObject> GetObjectsAt(BoardPoint point) =>
-            Objects.Where(obj => obj switch
-            {
-                IAbnormalShape bigObj => bigObj.ExtraPositions.Contains(point) || bigObj.Position == point,
-                _ => obj.Position == point
-            });
+            Objects.Where(obj =>
+                obj switch
+                {
+                    IAbnormalShape bigObj => bigObj.ExtraPositions.Contains(point)
+                        || bigObj.Position == point,
+                    _ => obj.Position == point,
+                }
+            );
 
         /// <summary>
         /// 指定した座標に存在する駒を返す
@@ -82,7 +85,10 @@ namespace NoMoney.Assets.Scripts.Game.Board
         /// 各こまのターンエンド処理をする
         /// </summary>
         public void OnTurnChanged(Turn turn) =>
-            Objects.Where(o => o is Piece piece && piece.Side == turn.TurnPlayer).Cast<Piece>().ToList()
+            Objects
+                .Where(o => o is Piece piece && piece.Side == turn.TurnPlayer)
+                .Cast<Piece>()
+                .ToList()
                 .ForEach(p => p.OnTurnChanged());
 
         /// <summary>
@@ -92,10 +98,14 @@ namespace NoMoney.Assets.Scripts.Game.Board
         public GameStatus JudgeGameState()
         {
             // プレイヤーの駒が上端に到達すれば勝利
-            var isWin = Pieces.Any(piece => piece.Side == PieceSide.Player && piece.Position.Y == 0);
+            var isWin = Pieces.Any(piece =>
+                piece.Side == PieceSide.Player && piece.Position.Y == 0
+            );
 
             // 敵の駒が下端に到達すれば敗北
-            var isLose = Pieces.Any(piece => piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1);
+            var isLose = Pieces.Any(piece =>
+                piece.Side == PieceSide.Enemy && piece.Position.Y == Size.Height - 1
+            );
 
             // 駒が全て消えれば引き分け
             var isDraw = Pieces.Count() == 0;
@@ -105,7 +115,7 @@ namespace NoMoney.Assets.Scripts.Game.Board
                 { } when isWin => GameStatus.Win,
                 { } when isLose => GameStatus.Lose,
                 { } when isDraw => GameStatus.Draw,
-                _ => GameStatus.Playing
+                _ => GameStatus.Playing,
             };
         }
 
@@ -125,20 +135,22 @@ namespace NoMoney.Assets.Scripts.Game.Board
         public int Width
         {
             get => _Width;
-            private set => _Width = value switch
-            {
-                < 1 => throw new System.ArgumentOutOfRangeException(),
-                _ => value
-            };
+            private set =>
+                _Width = value switch
+                {
+                    < 1 => throw new System.ArgumentOutOfRangeException(),
+                    _ => value,
+                };
         }
         public int Height
         {
             get => _Height;
-            private set => _Height = value switch
-            {
-                < 1 => throw new System.ArgumentOutOfRangeException(),
-                _ => value
-            };
+            private set =>
+                _Height = value switch
+                {
+                    < 1 => throw new System.ArgumentOutOfRangeException(),
+                    _ => value,
+                };
         }
 
         public BoardSize(int width, int height)

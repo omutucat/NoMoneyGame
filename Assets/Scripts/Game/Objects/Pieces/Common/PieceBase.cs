@@ -34,7 +34,12 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
             // NOTE: Untouchableになることはあるが、Untouchableでなくなる事はないとする。
             true && !StatusList.Any(s => s is Untouchable) && this is not IUntouchable;
 
-        protected Piece(BoardPoint position, PieceSide side, IEnumerable<PieceStatus>? statusList = null) : base(position)
+        protected Piece(
+            BoardPoint position,
+            PieceSide side,
+            IEnumerable<PieceStatus>? statusList = null
+        )
+            : base(position)
         {
             Side = side;
             StatusList = statusList?.ToList() ?? new List<PieceStatus>();
@@ -43,7 +48,7 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
                 // NOTE: 向きは所属によって設定する
                 PieceSide.Player => PieceDirection.Up,
                 PieceSide.Enemy => PieceDirection.Down,
-                _ => throw new System.NotImplementedException()
+                _ => throw new System.NotImplementedException(),
             };
         }
 
@@ -78,7 +83,8 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
                 return false;
             }
 
-            var attackTarget = board.GetObjectsAt(point).FirstOrDefault(o => o is IAttackTarget) as IAttackTarget;
+            var attackTarget =
+                board.GetObjectsAt(point).FirstOrDefault(o => o is IAttackTarget) as IAttackTarget;
 
             switch (attackTarget)
             {
@@ -96,20 +102,23 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
 
         protected virtual bool CanAttackTo(IAttackTarget target) => target.IsTouchable;
 
-        protected virtual void AttackTo(BoardModel board, IAttackTarget target) => target.OnAttacked(board, this);
+        protected virtual void AttackTo(BoardModel board, IAttackTarget target) =>
+            target.OnAttacked(board, this);
 
         /// <summary>
         /// 到達可能な座標を取得する
         /// </summary>
         /// <param name="board"></param>
         /// <returns></returns>
-        public List<BoardPoint> GetReachablePoints(BoardModel board) => this switch
-        {
-            { } p when p.StatusList.Any(s => s is IMoveEffect) =>
-                (p.StatusList.First(s => s is IMoveEffect) as IMoveEffect).GetAffectedReachablePoint(p, board),
-            IExtraMove p => p.GetSpecificReachablePoint(board),
-            _ => GetDefaultReachablePoints(board)
-        };
+        public List<BoardPoint> GetReachablePoints(BoardModel board) =>
+            this switch
+            {
+                { } p when p.StatusList.Any(s => s is IMoveEffect) => (
+                    p.StatusList.First(s => s is IMoveEffect) as IMoveEffect
+                ).GetAffectedReachablePoint(p, board),
+                IExtraMove p => p.GetSpecificReachablePoint(board),
+                _ => GetDefaultReachablePoints(board),
+            };
 
         /// <summary>
         /// 向きや盤面の境界を考慮した移動可能な座標を取得する
@@ -117,20 +126,28 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
         public List<BoardPoint> GetDefaultReachablePoints(BoardModel board) =>
-            MoveRange.Select(p => Direction switch
-                {
-                    PieceDirection.Up => new BoardPoint(Position.X + p.X, Position.Y + p.Y),
-                    PieceDirection.Down => new BoardPoint(Position.X - p.X, Position.Y - p.Y),
-                    _ => throw new System.NotImplementedException()
-                }
-            ).Where(p => board.IsInsidePoint(p)).ToList();
+            MoveRange
+                .Select(p =>
+                    Direction switch
+                    {
+                        PieceDirection.Up => new BoardPoint(Position.X + p.X, Position.Y + p.Y),
+                        PieceDirection.Down => new BoardPoint(Position.X - p.X, Position.Y - p.Y),
+                        _ => throw new System.NotImplementedException(),
+                    }
+                )
+                .Where(p => board.IsInsidePoint(p))
+                .ToList();
 
         /// <summary>
         /// ターンが変わった時の処理
         /// </summary>
         public void OnTurnChanged()
         {
-            StatusList.Where(s => s is ITurnChangeEffect).Cast<ITurnChangeEffect>().ToList().ForEach(s => s.OnTurnEnd());
+            StatusList
+                .Where(s => s is ITurnChangeEffect)
+                .Cast<ITurnChangeEffect>()
+                .ToList()
+                .ForEach(s => s.OnTurnEnd());
 
             // NOTE: hookを派生クラスでオーバーライドすることで追加の処理を実行可能
             OnTurnChangedHook();
@@ -170,6 +187,6 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
     {
         // TODO: 所属の情報ってここじゃないところに書くべきかも
         Player,
-        Enemy
+        Enemy,
     }
 }

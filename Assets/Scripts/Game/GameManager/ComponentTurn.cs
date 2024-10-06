@@ -9,9 +9,14 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
     /// </summary>
     public class ComponentTurn : MonoBehaviour
     {
-        [SerializeField] private Text _TurnCountText;
-        [SerializeField] private GameObject _PlayerTurnBackground;
-        [SerializeField] private GameObject _EnemyTurnBackground;
+        [SerializeField]
+        private Text _TurnCountText;
+
+        [SerializeField]
+        private GameObject _PlayerTurnBackground;
+
+        [SerializeField]
+        private GameObject _EnemyTurnBackground;
 
         public void OnTurnChanged(Turn turn)
         {

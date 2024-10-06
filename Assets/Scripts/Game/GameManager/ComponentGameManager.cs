@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
 namespace NoMoney.Assets.Scripts.Game.GameManager
 {
     /// <summary>
@@ -18,10 +17,12 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
         /// 現在のゲームの状態
         /// </summary>
         private IGameState CurrentState { get; set; }
+
         /// <summary>
         /// 現在の盤面
         /// </summary>
         public BoardModel Board { get; private set; }
+
         /// <summary>
         /// 現在のターン
         /// </summary>
@@ -30,17 +31,23 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
         /// <summary>
         /// 盤面の描画コンポーネント
         /// </summary>
-        [SerializeField] private ComponentBoardPanel _BoardPanel;
+        [SerializeField]
+        private ComponentBoardPanel _BoardPanel;
+
         /// <summary>
         /// ターン描画コンポーネント
         /// </summary>
-        [SerializeField] private ComponentTurn _TurnComponent;
+        [SerializeField]
+        private ComponentTurn _TurnComponent;
+
         /// <summary>
         /// メッセージ表示用テキスト
         /// </summary>
-        [SerializeField] private Text _MessageText;
+        [SerializeField]
+        private Text _MessageText;
 
         private Piece _SelectedPiece = null;
+
         /// <summary>
         /// 選択中の駒
         /// </summary>
@@ -51,7 +58,9 @@ namespace NoMoney.Assets.Scripts.Game.GameManager
             {
                 // 駒が選択された時に移動可能なマスを更新
                 _SelectedPiece = value;
-                MovablePoints = value is null ? new List<BoardPoint>() : value.GetReachablePoints(Board);
+                MovablePoints = value is null
+                    ? new List<BoardPoint>()
+                    : value.GetReachablePoints(Board);
             }
         }
 

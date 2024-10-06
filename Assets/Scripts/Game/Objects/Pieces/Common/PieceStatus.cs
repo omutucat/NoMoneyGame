@@ -46,12 +46,11 @@ namespace NoMoney.Assets.Scripts.Game.Objects.Pieces
         }
 
         public void OnTurnEnd() => DecreaseTurnCount();
+
         public List<BoardPoint> GetAffectedReachablePoint(Piece piece, BoardModel board) => new();
     }
 
-    public class Untouchable : PieceStatus
-    {
-    }
+    public class Untouchable : PieceStatus { }
 
     public interface IMoveEffect
     {
