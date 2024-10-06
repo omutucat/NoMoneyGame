@@ -3,7 +3,7 @@
     /// <summary>
     /// 盤面上のオブジェクト
     /// </summary>
-    public abstract class BoardObject
+    public abstract class BoardObject : IPosition
     {
         /// <summary>
         /// オブジェクトが破壊される時に呼び出すイベント

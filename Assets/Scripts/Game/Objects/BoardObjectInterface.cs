@@ -6,9 +6,19 @@ using NoMoney.Assets.Scripts.Game.Objects.Pieces;
 namespace NoMoney.Assets.Scripts.Game.Objects
 {
     /// <summary>
+    /// 位置を持つオブジェクトのインターフェース
+    /// </summary>
+    public interface IPosition
+    {
+        public BoardPoint Position { get; }
+
+        public bool IsExistAt(BoardPoint point) => Position == point;
+    }
+
+    /// <summary>
     /// 特殊な形状を持つオブジェクトのインターフェース
     /// </summary>
-    public interface IAbnormalShape
+    public interface IAbnormalShape : IPosition
     {
         public readonly struct SizeScale
         {
@@ -21,8 +31,6 @@ namespace NoMoney.Assets.Scripts.Game.Objects
                 HeightRatio = heightRatio;
             }
         }
-
-        public BoardPoint Position { get; }
 
         /// <summary>
         /// 追加の形状情報
@@ -44,6 +52,9 @@ namespace NoMoney.Assets.Scripts.Game.Objects
                 return positions;
             }
         }
+
+        bool IPosition.IsExistAt(BoardPoint point) =>
+            Position == point || ExtraPositions.Any(p => p == point);
 
         /// <summary>
         /// オブジェクトのサイズ倍率

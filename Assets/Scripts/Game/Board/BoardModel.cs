@@ -66,9 +66,8 @@ namespace NoMoney.Assets.Scripts.Game.Board
             Objects.Where(obj =>
                 obj switch
                 {
-                    IAbnormalShape bigObj => bigObj.ExtraPositions.Contains(point)
-                        || bigObj.Position == point,
-                    _ => obj.Position == point,
+                    IPosition p => p.IsExistAt(point),
+                    _ => obj.Position.Equals(point),
                 }
             );
 
